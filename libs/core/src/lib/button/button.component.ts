@@ -42,7 +42,7 @@ export type ButtonType =
 })
 export class ButtonComponent implements OnChanges, CssClassBuilder, OnInit {
     /**
-     * Native type of button element
+     * NATIVE type of button element
      */
     @Input()
     @HostBinding('attr.type')
