@@ -38,13 +38,14 @@ export class PlatformDocumentationComponent extends DocumentationBaseComponent {
             { url: 'platform/combobox', name: 'Combobox' },
             {
                 name: 'List And Items',
-                subItems: [{ url: 'platform/list', name: 'List' },
-                { url: 'platform/standard-list-item', name: 'Standard List Item' }]
-
+                subItems: [
+                    { url: 'platform/list', name: 'List' },
+                    { url: 'platform/standard-list-item', name: 'Standard List Item' }
+                ]
             }
         ];
 
-        this.layouts = [];
+        this.layouts = [{ url: 'platform/dynamic-page', name: 'Dynamic Page' }];
 
         this.utilities = [];
 

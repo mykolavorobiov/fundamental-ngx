@@ -40,6 +40,13 @@ export const ROUTES: Routes = [
                     ).then((m) => m.PlatformCheckboxGroupDocsModule)
             },
             {
+                path: 'dynamic-page',
+                loadChildren: () =>
+                    import('./component-docs/platform-dynamic-page/platform-dynamic-page.module').then(
+                        (m) => m.PlatformDynamicPageDocsModule
+                    )
+            },
+            {
                 path: 'link',
                 loadChildren: () =>
                     import('./component-docs/platform-link/platform-link.module').then((m) => m.PlatformLinkDocsModule)
@@ -143,25 +150,30 @@ export const ROUTES: Routes = [
             {
                 path: 'combobox',
                 loadChildren: () =>
-                    import('./component-docs/platform-combobox/platform-combobox-docs.module')
-                        .then(m => m.PlatformComboboxDocsModule)
+                    import('./component-docs/platform-combobox/platform-combobox-docs.module').then(
+                        (m) => m.PlatformComboboxDocsModule
+                    )
             },
             {
                 path: 'list',
                 loadChildren: () =>
-                    import('./component-docs/platform-list/platform-list-docs.module').then((m) => m.PlatformListDocsModule)
+                    import('./component-docs/platform-list/platform-list-docs.module').then(
+                        (m) => m.PlatformListDocsModule
+                    )
             },
             {
                 path: 'standard-list-item',
                 loadChildren: () =>
-                    import('./component-docs/platform-standard-list-item/platform-standard-list-item-docs.module').then((m) =>
-                        m.PlatformStandardListItemDocsModule)
+                    import('./component-docs/platform-standard-list-item/platform-standard-list-item-docs.module').then(
+                        (m) => m.PlatformStandardListItemDocsModule
+                    )
             },
             {
                 path: 'thumbnail',
                 loadChildren: () =>
-                    import('./component-docs/platform-thumbnail/platform-thumbnail-docs.module').then((m) =>
-                        m.PlatformThumbnailDocsModule)
+                    import('./component-docs/platform-thumbnail/platform-thumbnail-docs.module').then(
+                        (m) => m.PlatformThumbnailDocsModule
+                    )
             }
         ]
     }
