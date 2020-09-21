@@ -14,6 +14,7 @@ import { PopoverDirective, PopoverFillMode } from './popover-directive/popover.d
 import { PopoverDropdownComponent } from './popover-dropdown/popover-dropdown.component';
 import { ConnectedPosition, FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay/position/flexible-connected-position-strategy';
 import { CdkConnectedOverlay, Overlay, ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
+import { takeUntil } from 'rxjs/operators';
 
 let popoverUniqueId = 0;
 
@@ -154,6 +155,12 @@ export class PopoverComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         this.addTriggerListeners();
         this.scrollStrategy = this._overlay.scrollStrategies.reposition({scrollThrottle: 10, autoClose: true});
+
+
+        if (this.overlay) {
+            this.overlay.attach
+                .subscribe(() => this.overlay.overlayRef.setDirection('ltr'));
+        }
     }
 
     debug(a): void {
