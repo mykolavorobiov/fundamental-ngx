@@ -1,23 +1,24 @@
 @import '~fundamental-styles/dist/popover';
+@import '~@angular/cdk/overlay-prebuilt.css';
 
-//TODO to be reviewed and if needed to be moved in fd-styles
-.fd-popover-custom {
-    margin-right: 0;
-    display: inline-block;
-
-    .fd-dropdown {
-        position: static;
-    }
-
-    &--disabled {
-        pointer-events: none;
-    }
-}
-
-//TODO to be reviewed and if needed to be moved in fd-styles
-fd-popover-body {
-    .fd-menu {
-        width: auto;
-        display: block;
-    }
-}
+////TODO to be reviewed and if needed to be moved in fd-styles
+//.fd-popover-custom {
+//    margin-right: 0;
+//    display: inline-block;
+//
+//    .fd-dropdown {
+//        position: static;
+//    }
+//
+//    &--disabled {
+//        pointer-events: none;
+//    }
+//}
+//
+////TODO to be reviewed and if needed to be moved in fd-styles
+//fd-popover-body {
+//    .fd-menu {
+//        width: auto;
+//        display: block;
+//    }
+//}

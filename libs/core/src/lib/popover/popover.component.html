@@ -1,35 +1,72 @@
-<div #popoverContainer [ngClass]="addContainerClass ? addContainerClass : ''">
-    <div
-        class="fd-popover__control"
-        [attr.aria-expanded]="this.disabled ? false : isOpen"
-        [attr.aria-disabled]="this.disabled"
-        aria-haspopup="true"
-        (keydown)="handleKeydown($event)"
-        [fdPopover]="popoverBody"
-        [additionalClasses]="additionalClasses"
-        [(isOpen)]="isOpen"
-        (isOpenChange)="openChanged($event)"
-        [noArrow]="noArrow"
-        [disabled]="disabled"
-        [triggers]="triggers"
-        [placement]="placement"
-        [focusTrapped]="focusTrapped"
-        [options]="options"
-        [fillControlMode]="fillControlMode"
-        [closeOnOutsideClick]="closeOnOutsideClick"
-        [closeOnEscapeKey]="closeOnEscapeKey"
-        [appendTo]="appendTo ? appendTo : popoverContainer"
-    >
-        <ng-content select="fd-popover-control"></ng-content>
-        <ng-content select="fd-dropdown-control"></ng-content>
+<!--<div #popoverContainer [ngClass]="addContainerClass ? addContainerClass : ''">-->
+<!--    <div-->
+<!--        class="fd-popover__control"-->
+<!--        [attr.aria-expanded]="this.disabled ? false : isOpen"-->
+<!--        [attr.aria-disabled]="this.disabled"-->
+<!--        aria-haspopup="true"-->
+<!--        (keydown)="handleKeydown($event)"-->
+<!--        [fdPopover]="popoverBody"-->
+<!--        [additionalClasses]="additionalClasses"-->
+<!--        [(isOpen)]="isOpen"-->
+<!--        (isOpenChange)="openChanged($event)"-->
+<!--        [noArrow]="noArrow"-->
+<!--        [disabled]="disabled"-->
+<!--        [triggers]="triggers"-->
+<!--        [placement]="placement"-->
+<!--        [focusTrapped]="focusTrapped"-->
+<!--        [options]="options"-->
+<!--        [fillControlMode]="fillControlMode"-->
+<!--        [closeOnOutsideClick]="closeOnOutsideClick"-->
+<!--        [closeOnEscapeKey]="closeOnEscapeKey"-->
+<!--        [appendTo]="appendTo ? appendTo : popoverContainer"-->
+<!--    >-->
+<!--        <ng-content select="fd-popover-control"></ng-content>-->
+<!--        <ng-content select="fd-dropdown-control"></ng-content>-->
+<!--    </div>-->
+<!--    <ng-template #popoverBody>-->
+<!--        <ng-container *ngTemplateOutlet="popoverBodyTpl"></ng-container>-->
+<!--    </ng-template>-->
+<!--</div>-->
+
+<!--<ng-template #popoverBodyTpl>-->
+<!--    <div [attr.aria-hidden]="disabled ? true : !isOpen">-->
+<!--        <ng-content select="fd-popover-body"></ng-content>-->
+<!--    </div>-->
+<!--</ng-template>-->
+
+<!--<div #trigger="cdkOverlayOrigin" cdkOverlayOrigin class="fd-popover__control">-->
+<!--    <ng-content select="fd-popover-control"></ng-content>-->
+<!--    <ng-content select="fd-dropdown-control"></ng-content>-->
+<!--</div>-->
+<!---->
+<!--<ng-template #debugRef="cdkConnectedOverlay"-->
+<!--             cdk-connected-overlay-->
+<!--             [cdkConnectedOverlayOpen]="isOpen"-->
+<!--             [cdkConnectedOverlayOrigin]="trigger"-->
+<!--             [cdkConnectedOverlayScrollStrategy]="scrollStrategy"-->
+<!--             [cdkConnectedOverlayPositionStrategy]="positionStrategy"-->
+<!--             (backdropClick)="handleBackdropClick($event)"-->
+<!--             (overlayKeydown)="handleKeydown($event)"-->
+<!--             (detach)="debug(debugRef)"-->
+<!--             (attach)="debug(debugRef)"-->
+<!--             (overlayOutsideClick)="handleOverlayOutsideClick($event)">-->
+<!--    <div class="fd-popover__body">-->
+<!--        <ng-content select="fd-popover-body"></ng-content>-->
+<!--    </div>-->
+<!--</ng-template>-->
+
+
+<div #trigger="cdkOverlayOrigin" cdkOverlayOrigin>
+    <div class="fd-popover__control" #triggerElement>
+        dasdasdasdsadasdsad fi asdasdh fjoifhuiasdhf uisdh fgsdhg fdhgofd ghosfd
     </div>
-    <ng-template #popoverBody>
-        <ng-container *ngTemplateOutlet="popoverBodyTpl"></ng-container>
-    </ng-template>
 </div>
 
-<ng-template #popoverBodyTpl>
-    <div [attr.aria-hidden]="disabled ? true : !isOpen">
-        <ng-content select="fd-popover-body"></ng-content>
+<ng-template cdkConnectedOverlay
+             [cdkConnectedOverlayOpen]="isOpen"
+             [cdkConnectedOverlayOrigin]="trigger">
+    oisdj fashfaisjdfoiasdj fpoisdja foipsdj fpoisd jfpoid jspofijsd afpoisdj fpoisdjfpoidjip
+    <div class="fd-popover__body">
+        oisdj fashfaisjdfoiasdj fpoisdja foipsdj fpoisd jfpoid jspofijsd afpoisdj fpoisdjfpoidjip
     </div>
 </ng-template>

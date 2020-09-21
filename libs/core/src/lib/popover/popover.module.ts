@@ -11,6 +11,7 @@ import { PopoverBodyHeaderDirective } from './popover-body/popover-body-directiv
 import { PopoverBodyFooterDirective } from './popover-body/popover-body-directives/popover-body-footer.directive';
 
 import { ButtonModule } from '../button/button.module';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @NgModule({
     declarations: [
@@ -23,7 +24,7 @@ import { ButtonModule } from '../button/button.module';
         PopoverBodyHeaderDirective,
         PopoverBodyFooterDirective
     ],
-    imports: [CommonModule, ButtonModule],
+    imports: [CommonModule, ButtonModule, OverlayModule],
     exports: [
         PopoverComponent,
         PopoverControlComponent,
