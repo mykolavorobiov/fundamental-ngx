@@ -41,9 +41,10 @@
     </div>
 </div>
 
-<ng-template #debugRef="cdkConnectedOverlay"
-             cdk-connected-overlay
+<ng-template
+             cdkConnectedOverlay
              [cdkConnectedOverlayOpen]="isOpen"
+             [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
              [cdkConnectedOverlayOrigin]="trigger"
              [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
              [cdkConnectedOverlayPositionStrategy]="positionStrategy"
@@ -57,7 +58,6 @@
 
 
 <!--<div #trigger="cdkOverlayOrigin" cdkOverlayOrigin>-->
-    <div class="fd-popover__control" #triggerElement>
 <!--        dasdasdasdsadasdsad fi asdasdh fjoifhuiasdhf uisdh fgsdhg fdhgofd ghosfd-->
 <!--    </div>-->
 <!--</div>-->

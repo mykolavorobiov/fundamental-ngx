@@ -15,6 +15,7 @@ import { PopoverDropdownComponent } from './popover-dropdown/popover-dropdown.co
 import { ConnectedPosition, FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay/position/flexible-connected-position-strategy';
 import { CdkConnectedOverlay, Overlay, ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { takeUntil } from 'rxjs/operators';
+import { KeyUtil } from '../utils/functions/key-util';
 
 let popoverUniqueId = 0;
 
@@ -53,6 +54,10 @@ export class PopoverComponent implements AfterViewInit {
     @Input()
     noArrow = true;
 
+    /** Whether the popover should have an arrow. */
+    @Input()
+    hasBackdrop = false;
+
     /** Whether the popover container needs an extra class for styling. */
     @Input()
     addContainerClass: string;
@@ -86,7 +91,9 @@ export class PopoverComponent implements AfterViewInit {
 
     @Input()
     positions: ConnectedPosition[] = [
-        { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' }
+        { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' },
+        { originX: 'center', originY: 'center', overlayX: 'start', overlayY: 'top' },
+        { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' }
     ]
 
     /** Whether the popover is open. Can be used through two-way binding. */
@@ -219,21 +226,30 @@ export class PopoverComponent implements AfterViewInit {
 
     /** Method that is called, when there is keydown event dispatched */
     public handleKeydown(event: KeyboardEvent): void {
-        console.log(event);
-        console.log('keydown');
-        if (event.key === 'ArrowDown' && event.altKey) {
+        if (KeyUtil.isKey(event, 'ArrowDown') && event.altKey) {
             this.open();
         }
+
+        if (KeyUtil.isKey(event, 'Escape') && this.closeOnEscapeKey) {
+            console.log('escape');
+            this.close();
+        }
     }
+
+
 
     handleBackdropClick(event: MouseEvent): void {
         console.log(event);
         console.log('backdrop click');
+        if (this.closeOnOutsideClick) {
+            this.close();
+        }
     }
 
     handleOverlayOutsideClick(event: MouseEvent): void {
-        console.log(event);
-        console.log('Overlay Outside Click');
+        if (this._shouldClose(event)) {
+            this.close();
+        }
     }
 
     /** @hidden
@@ -253,5 +269,20 @@ export class PopoverComponent implements AfterViewInit {
                 }));
             });
         }
+    }
+
+    /** @hidden */
+    private _triggerContainsTarget(event: Event): boolean {
+        const triggerElement = this.triggerRef.nativeElement;
+        return triggerElement.contains(event.composedPath()[0]);
+    }
+
+    /** @hidden */
+    private _shouldClose(event: MouseEvent): boolean {
+        return (
+            this.isOpen &&
+            this.closeOnOutsideClick &&
+            !this._triggerContainsTarget(event)
+        );
     }
 }
