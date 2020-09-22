@@ -13,8 +13,7 @@ import { Placement, PopperOptions } from 'popper.js';
 import { PopoverDirective, PopoverFillMode } from './popover-directive/popover.directive';
 import { PopoverDropdownComponent } from './popover-dropdown/popover-dropdown.component';
 import { ConnectedPosition, FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay/position/flexible-connected-position-strategy';
-import { CdkConnectedOverlay, Overlay, ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
-import { takeUntil } from 'rxjs/operators';
+import { CdkConnectedOverlay, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 import { KeyUtil } from '../utils/functions/key-util';
 
 let popoverUniqueId = 0;
@@ -33,7 +32,8 @@ let popoverUniqueId = 0;
         '[class.fd-popover-custom]': 'true',
         '[attr.id]': 'id'
     },
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverComponent implements AfterViewInit {
     /** @hidden */
