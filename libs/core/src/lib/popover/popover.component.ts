@@ -13,8 +13,9 @@ import { Placement, PopperOptions } from 'popper.js';
 import { PopoverDirective, PopoverFillMode } from './popover-directive/popover.directive';
 import { PopoverDropdownComponent } from './popover-dropdown/popover-dropdown.component';
 import { ConnectedPosition, FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay/position/flexible-connected-position-strategy';
-import { CdkConnectedOverlay, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, CdkOverlayOrigin, Overlay, ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { KeyUtil } from '../utils/functions/key-util';
+import { BasePopoverClass } from './base/base-popover.class';
 
 let popoverUniqueId = 0;
 
@@ -35,7 +36,7 @@ let popoverUniqueId = 0;
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverComponent implements AfterViewInit {
+export class PopoverComponent extends BasePopoverClass implements AfterViewInit {
     /** @hidden */
     @ViewChild(PopoverDirective)
     directiveRef: PopoverDirective;
@@ -47,47 +48,29 @@ export class PopoverComponent implements AfterViewInit {
     /** @hidden */
     @ContentChild(PopoverDropdownComponent) dropdownComponent: PopoverDropdownComponent;
 
-    @ViewChild('triggerElement', { read: ElementRef })
-    triggerRef: ElementRef
-
-    /** Whether the popover should have an arrow. */
-    @Input()
-    noArrow = true;
-
-    /** Whether the popover should have an arrow. */
-    @Input()
-    hasBackdrop = false;
-
-    /** Whether the popover container needs an extra class for styling. */
-    @Input()
-    addContainerClass: string;
+    @ViewChild(CdkOverlayOrigin)
+    triggerOrigin: CdkOverlayOrigin
 
     /** Whether the popover is disabled. */
     @Input()
     @HostBinding('class.fd-popover-custom--disabled')
     disabled = false;
 
-    /** @deprecated
-     * Left for backward compatibility. It's going to be removed on 0.20.0
-     */
-    @Input()
-    isDropdown = false;
-
     /** The element to which the popover should be appended. */
     @Input()
     appendTo: HTMLElement | 'body';
-
-    /** The trigger events that will open/close the popover.
-     *  Accepts any [HTML DOM Events](https://www.w3schools.com/jsref/dom_obj_event.asp). */
-    @Input()
-    triggers: string[] = ['click'];
 
     /** The placement of the popover. It can be one of: top, top-start, top-end, bottom,
      *  bottom-start, bottom-end, right, right-start, right-end, left, left-start, left-end. */
     @Input()
     placement: Placement = 'bottom-start';
 
+
+    @Input()
     scrollStrategy: ScrollStrategy;
+
+    @Input()
+    position:
 
     @Input()
     positions: ConnectedPosition[] = [
@@ -147,8 +130,6 @@ export class PopoverComponent implements AfterViewInit {
     @Input()
     id: string = 'fd-popover-' + popoverUniqueId++;
 
-    positionStrategy: FlexibleConnectedPositionStrategy;
-
     private eventRef: Function[] = [];
 
 
@@ -156,13 +137,10 @@ export class PopoverComponent implements AfterViewInit {
         private _renderer: Renderer2,
         private _changeDetectorReference: ChangeDetectorRef,
         private _overlay: Overlay
-    ) {
-    }
+    ) { super(); }
 
     ngAfterViewInit(): void {
         this.addTriggerListeners();
-        this.scrollStrategy = this._overlay.scrollStrategies.reposition({scrollThrottle: 10, autoClose: true});
-
 
         if (this.overlay) {
             this.overlay.attach
@@ -264,7 +242,7 @@ export class PopoverComponent implements AfterViewInit {
     private addTriggerListeners(): void {
         if (this.triggers && this.triggers.length > 0) {
             this.triggers.forEach(trigger => {
-                this.eventRef.push(this._renderer.listen(this.triggerRef.nativeElement, trigger, () => {
+                this.eventRef.push(this._renderer.listen(this.triggerOrigin.elementRef.nativeElement, trigger, () => {
                     this.toggle();
                 }));
             });
@@ -273,7 +251,7 @@ export class PopoverComponent implements AfterViewInit {
 
     /** @hidden */
     private _triggerContainsTarget(event: Event): boolean {
-        const triggerElement = this.triggerRef.nativeElement;
+        const triggerElement = this.triggerOrigin.elementRef.nativeElement;
         return triggerElement.contains(event.composedPath()[0]);
     }
 
@@ -284,5 +262,93 @@ export class PopoverComponent implements AfterViewInit {
             this.closeOnOutsideClick &&
             !this._triggerContainsTarget(event)
         );
+    }
+
+    private _
+
+    /** @hidden */
+    private _getPositions(): ConnectedPosition[] {
+        let positions: ConnectedPosition[] = [];
+        const offsetYPosition = 0;
+        const offsetXPosition = 0;
+        if (this._isMenuItem()) {
+            if (this._menu.cascadesLeft()) {
+                positions = [
+                    {
+                        originX: 'start',
+                        originY: 'top',
+                        overlayX: 'end',
+                        overlayY: 'top',
+                        offsetX: offsetXPosition
+                    },
+                    {
+                        originX: 'start',
+                        originY: 'bottom',
+                        overlayX: 'end',
+                        overlayY: 'bottom',
+                        offsetX: offsetXPosition
+                    }
+                ];
+            } else {
+                positions = [
+                    {
+                        originX: 'end',
+                        originY: 'top',
+                        overlayX: 'start',
+                        overlayY: 'top',
+                        offsetX: -offsetXPosition
+                    },
+                    {
+                        originX: 'end',
+                        originY: 'bottom',
+                        overlayX: 'start',
+                        overlayY: 'bottom',
+                        offsetX: -offsetXPosition
+                    }
+                ];
+            }
+        } else {
+            if (this._menu.cascadesLeft()) {
+                positions = [
+                    {
+                        originX: 'end',
+                        originY: 'bottom',
+                        overlayX: 'end',
+                        overlayY: 'top',
+                        offsetY: offsetYPosition,
+                        offsetX: offsetXPosition
+                    },
+                    {
+                        originX: 'end',
+                        originY: 'top',
+                        overlayX: 'end',
+                        overlayY: 'bottom',
+                        offsetY: -offsetYPosition,
+                        offsetX: offsetXPosition
+                    }
+                ];
+            } else {
+                positions = [
+                    {
+                        originX: 'start',
+                        originY: 'bottom',
+                        overlayX: 'start',
+                        overlayY: 'top',
+                        offsetY: offsetYPosition,
+                        offsetX: -offsetXPosition
+                    },
+                    {
+                        originX: 'start',
+                        originY: 'top',
+                        overlayX: 'start',
+                        overlayY: 'bottom',
+                        offsetY: -offsetYPosition,
+                        offsetX: -offsetXPosition
+                    }
+                ];
+            }
+        }
+
+        return positions;
     }
 }
