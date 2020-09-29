@@ -60,4 +60,5 @@ import { TabItemDirective } from './tab-item/tab-item.directive';
         TabSeparatorDirective
     ]
 })
-export class TabsModule {}
+export class TabsModule {
+}

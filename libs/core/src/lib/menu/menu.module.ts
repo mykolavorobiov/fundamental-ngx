@@ -6,7 +6,10 @@ import { MenuTitleDirective } from './directives/menu-title.directive';
 import { MenuInteractiveDirective } from './directives/menu-interactive.directive';
 import { MenuSeparatorComponent } from './menu-separator/menu-separator.component';
 import { MenuAddonDirective } from './directives/menu-addon.directive';
-import { MenuItemComponent, SubmenuComponent } from './menu-item/menu-item.component';
+import {
+    MenuItemComponent,
+    SubmenuComponent
+} from './menu-item/menu-item.component';
 import { MenuShortcutDirective } from './directives/menu-shortcut.directive';
 import { PopoverModule } from '../popover/popover.module';
 import { MenuTriggerDirective } from './directives/menu-trigger.directive';
@@ -36,4 +39,5 @@ import { MenuTriggerDirective } from './directives/menu-trigger.directive';
         MenuTriggerDirective
     ]
 })
-export class MenuModule {}
+export class MenuModule {
+}

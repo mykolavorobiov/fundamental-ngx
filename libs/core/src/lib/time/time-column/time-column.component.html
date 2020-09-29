@@ -1,43 +1,43 @@
 <label class="fd-time__slider-label">{{timeConfig?.label}}</label>
-<button class="fd-button fd-button fd-button--transparent sap-icon--navigation-up-arrow"
+<button (click)="scrollUp($event)"
+        (keydown)="spinnerButtonKeydownHandle($event, true)"
         *ngIf="active && spinners"
         [attr.aria-label]="timeConfig?.decreaseLabel"
-        (keydown)="spinnerButtonKeydownHandle($event, true)"
-        (click)="scrollUp($event)"></button>
-<div class="fd-time__wrapper" [ngClass]="{'fd-time__wrapper--active': active, 'fd-time__wrapper--meridian': meridian}">
-    <ul class="fd-time__list"
-        [ngClass]="{'fd-time-column-custom-hidden': !active}"
-        [config]="config"
+        class="fd-button fd-button fd-button--transparent sap-icon--navigation-up-arrow"></button>
+<div [ngClass]="{'fd-time__wrapper--active': active, 'fd-time__wrapper--meridian': meridian}" class="fd-time__wrapper">
+    <ul (activeChange)="activeChangedHandle($event)"
         (click)="indicator.focus()"
-        (activeChange)="activeChangedHandle($event)"
         (dragStateChange)="handleDrag($event)"
+        [config]="config"
+        [ngClass]="{'fd-time-column-custom-hidden': !active}"
+        class="fd-time__list"
         fdCarousel>
-        <li class="fd-time__item"
-            fdCarouselItem
+        <li #item=fdCarouselItem
             *ngFor="let row of rows; let index = index"
-            #item=fdCarouselItem
             [id]="id + index"
-            [value]="row">
-            <span class="fd-time__unit" (click)="pick(item, index)">
+            [value]="row"
+            class="fd-time__item"
+            fdCarouselItem>
+            <span (click)="pick(item, index)" class="fd-time__unit">
                 {{row | twoDigits: keepTwoDigits}}
             </span>
         </li>
     </ul>
-    <div class="fd-time__current-indicator"
-         #indicator
-         tabindex="0"
+    <div #indicator
+         [id]="currentIndicatorId"
          [ngClass]="{'fd-time-column-custom-hidden': !active}"
-         [id]="currentIndicatorId">
+         class="fd-time__current-indicator"
+         tabindex="0">
     </div>
-    <span class="fd-time__item fd-time__item--collapsed"
-          [ngClass]="{'fd-time-column-custom-hidden': active}">
+    <span [ngClass]="{'fd-time-column-custom-hidden': active}"
+          class="fd-time__item fd-time__item--collapsed">
             {{activeValue | twoDigits: keepTwoDigits}}
     </span>
 </div>
-<button class="fd-button fd-button fd-button--transparent sap-icon--navigation-down-arrow"
+<button (click)="scrollDown()"
+        (keydown)="spinnerButtonKeydownHandle($event)"
         *ngIf="active && spinners"
         [attr.aria-label]="timeConfig?.increaseLabel"
-        (keydown)="spinnerButtonKeydownHandle($event)"
-        (click)="scrollDown()">
+        class="fd-button fd-button fd-button--transparent sap-icon--navigation-down-arrow">
 </button>
 

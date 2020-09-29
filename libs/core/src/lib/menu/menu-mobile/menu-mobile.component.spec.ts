@@ -1,18 +1,35 @@
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import {
+    async,
+    ComponentFixture,
+    fakeAsync,
+    TestBed,
+    tick
+} from '@angular/core/testing';
 
 import { MenuMobileComponent } from './menu-mobile.component';
-import { Component, Inject, InjectionToken, ViewChild } from '@angular/core';
+import {
+    Component,
+    Inject,
+    InjectionToken,
+    ViewChild
+} from '@angular/core';
 import { MenuComponent } from '../menu.component';
 import { MenuInteractiveDirective } from '../directives/menu-interactive.directive';
-import { MenuItemComponent, SubmenuComponent } from '../menu-item/menu-item.component';
+import {
+    MenuItemComponent,
+    SubmenuComponent
+} from '../menu-item/menu-item.component';
 import { PopoverModule } from '../../popover/popover.module';
 import { CommonModule } from '@angular/common';
-import { DIALOG_CONFIG, DialogConfig } from '../../dialog/dialog-utils/dialog-config.class';
+import { DialogConfig } from '../../dialog/dialog-utils/dialog-config.class';
 import { MenuMobileModule } from './menu-mobile.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MenuTitleDirective } from '../directives/menu-title.directive';
 import { MobileModeConfig } from '../../utils/interfaces/mobile-mode-config';
-import { getMobileModeViewElements, whenStable } from '../../utils/tests';
+import {
+    getMobileModeViewElements,
+    whenStable
+} from '../../utils/tests';
 import { RouterTestingModule } from '@angular/router/testing';
 
 const MOBILE_CONFIG_TEST_TOKEN = new InjectionToken<MobileModeConfig>('For test purposes');
@@ -41,7 +58,8 @@ class TesNestedMenuItemComponent {
 
     menuItemTitle = 'Test item title';
 
-    constructor(@Inject(MOBILE_CONFIG_TEST_TOKEN) public mobileConfig: MobileModeConfig) {}
+    constructor(@Inject(MOBILE_CONFIG_TEST_TOKEN) public mobileConfig: MobileModeConfig) {
+    }
 }
 
 describe('MenuMobileComponent', () => {
@@ -60,7 +78,7 @@ describe('MenuMobileComponent', () => {
                 SubmenuComponent,
                 MenuComponent
             ],
-            imports: [CommonModule, PopoverModule, MenuMobileModule, NoopAnimationsModule, RouterTestingModule],
+            imports: [CommonModule, PopoverModule, MenuMobileModule, NoopAnimationsModule, RouterTestingModule]
         })
             .compileComponents();
     }));
@@ -96,7 +114,7 @@ describe('MenuMobileComponent', () => {
     it('should use custom dialog configuration', fakeAsync(() => {
         const customDialogClass = 'test-dialog-class';
 
-        setup({ dialogConfig: { dialogPanelClass: customDialogClass } as DialogConfig});
+        setup({ dialogConfig: { dialogPanelClass: customDialogClass } as DialogConfig });
 
         menu.open();
         fixture.detectChanges();
@@ -177,7 +195,7 @@ describe('MenuMobileComponent', () => {
     });
 
     it('should properly render title and close button based on MobileConfig', async () => {
-        setup({title: MOBILE_CONFIG.title, hasCloseButton: true});
+        setup({ title: MOBILE_CONFIG.title, hasCloseButton: true });
 
         await whenStable(fixture);
 
@@ -193,7 +211,7 @@ describe('MenuMobileComponent', () => {
     });
 
     it('should properly render approve and dismiss buttons based on MobileConfig', async () => {
-        setup({cancelButtonText: 'APPROVE', approveButtonText: 'DISMISS'});
+        setup({ cancelButtonText: 'APPROVE', approveButtonText: 'DISMISS' });
 
         await whenStable(fixture);
 

@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    Input,
+    ViewEncapsulation
+} from '@angular/core';
 import { AbstractFdNgxClass } from '../utils/abstract-fd-ngx-class';
 
 /**
@@ -44,6 +50,11 @@ export class IconComponent extends AbstractFdNgxClass {
     @Input() size = '';
 
     /** @hidden */
+    constructor(private elementRef: ElementRef) {
+        super(elementRef);
+    }
+
+    /** @hidden */
     _setProperties(): void {
         if (this.glyph) {
             this._addClassToElement(PREFIX_ICON_CLASS + this.glyph);
@@ -52,10 +63,5 @@ export class IconComponent extends AbstractFdNgxClass {
         if (this.size) {
             this._addClassToElement(PREFIX_ICON_CLASS + this.size);
         }
-    }
-
-    /** @hidden */
-    constructor(private elementRef: ElementRef) {
-        super(elementRef);
     }
 }

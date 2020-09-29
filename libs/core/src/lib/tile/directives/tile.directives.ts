@@ -1,5 +1,15 @@
-import { Directive, ElementRef, HostBinding, Input, OnChanges, OnInit } from '@angular/core';
-import { applyCssClass, CssClassBuilder } from '../../utils/public_api';
+import {
+    Directive,
+    ElementRef,
+    HostBinding,
+    Input,
+    OnChanges,
+    OnInit
+} from '@angular/core';
+import {
+    applyCssClass,
+    CssClassBuilder
+} from '../../utils/public_api';
 
 @Directive({
     selector: '[fdTileContent], [fd-tile-content]'
@@ -127,7 +137,8 @@ export class TileRefreshDirective implements OnInit, OnChanges, CssClassBuilder 
     @Input()
     class: string;
 
-    constructor(private _elementRef: ElementRef) {}
+    constructor(private _elementRef: ElementRef) {
+    }
 
     /** @hidden */
     ngOnChanges(): void {
@@ -284,7 +295,8 @@ export class TileActionCloseDirective implements OnInit, OnChanges, CssClassBuil
     @Input()
     class: string;
 
-    constructor(private _elementRef: ElementRef) {}
+    constructor(private _elementRef: ElementRef) {
+    }
 
     /** @hidden */
     ngOnChanges(): void {
@@ -319,7 +331,8 @@ export class TileActionIndicatorDirective implements OnInit, OnChanges, CssClass
     @Input()
     class: string;
 
-    constructor(private _elementRef: ElementRef) {}
+    constructor(private _elementRef: ElementRef) {
+    }
 
     /** @hidden */
     ngOnChanges(): void {

@@ -4,12 +4,15 @@ import {
     EmbeddedViewRef,
     HostBinding,
     Input,
+    OnChanges,
     OnInit,
     TemplateRef,
-    ViewContainerRef,
-    OnChanges
+    ViewContainerRef
 } from '@angular/core';
-import { applyCssClass, CssClassBuilder } from '../../utils/public_api';
+import {
+    applyCssClass,
+    CssClassBuilder
+} from '../../utils/public_api';
 
 /**
  * Directive used to identify the template which will populate the tab header.
@@ -29,7 +32,8 @@ import { applyCssClass, CssClassBuilder } from '../../utils/public_api';
     // tslint:disable-next-line:directive-selector
     selector: '[fd-tab-title-template]'
 })
-export class TabTitleDirective {}
+export class TabTitleDirective {
+}
 
 /**
  * Not for external use. Portal to render the complex title template.
@@ -45,7 +49,8 @@ export class TabLoadTitleDirective implements OnInit {
 
     private contentRef: EmbeddedViewRef<any>;
 
-    constructor(private _viewRef: ViewContainerRef) {}
+    constructor(private _viewRef: ViewContainerRef) {
+    }
 
     ngOnInit(): void {
         this._viewRef.clear();
@@ -91,7 +96,8 @@ export class TabIconDirective implements CssClassBuilder, OnChanges {
     icon: string;
 
     /** @hidden */
-    constructor(private _elementRef: ElementRef) {}
+    constructor(private _elementRef: ElementRef) {
+    }
 
     /** @hidden
      * Function runs when component is initialized
@@ -126,7 +132,8 @@ export class TabIconDirective implements CssClassBuilder, OnChanges {
         class: 'fd-tabs__tag'
     }
 })
-export class TabTagDirective {}
+export class TabTagDirective {
+}
 
 @Directive({
     // tslint:disable-next-line:directive-selector
@@ -135,7 +142,8 @@ export class TabTagDirective {}
         class: 'fd-tabs__label'
     }
 })
-export class TabLabelDirective {}
+export class TabLabelDirective {
+}
 
 @Directive({
     // tslint:disable-next-line:directive-selector
@@ -144,7 +152,8 @@ export class TabLabelDirective {}
         class: 'fd-tabs__process'
     }
 })
-export class TabProcessDirective {}
+export class TabProcessDirective {
+}
 
 @Directive({
     // tslint:disable-next-line:directive-selector
@@ -153,7 +162,8 @@ export class TabProcessDirective {}
         class: 'fd-tabs__header'
     }
 })
-export class TabHeaderDirective {}
+export class TabHeaderDirective {
+}
 
 @Directive({
     // tslint:disable-next-line:directive-selector
@@ -162,7 +172,8 @@ export class TabHeaderDirective {}
         class: 'fd-tabs__counter-header'
     }
 })
-export class TabCounterHeaderDirective {}
+export class TabCounterHeaderDirective {
+}
 
 @Directive({
     // tslint:disable-next-line:directive-selector
@@ -171,7 +182,8 @@ export class TabCounterHeaderDirective {}
         class: 'fd-tabs__process-icon'
     }
 })
-export class TabProcessIconDirective {}
+export class TabProcessIconDirective {
+}
 
 @Directive({
     // tslint:disable-next-line:directive-selector
@@ -180,4 +192,5 @@ export class TabProcessIconDirective {}
         class: 'fd-tabs__separator'
     }
 })
-export class TabSeparatorDirective {}
+export class TabSeparatorDirective {
+}

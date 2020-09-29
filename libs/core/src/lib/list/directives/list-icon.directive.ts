@@ -1,8 +1,14 @@
-import { Directive, ElementRef, Input, OnChanges, OnInit } from '@angular/core';
+import {
+    Directive,
+    ElementRef,
+    Input,
+    OnChanges,
+    OnInit
+} from '@angular/core';
 import { applyCssClass } from '../../utils/decorators/apply-css-class.decorator';
 
 @Directive({
-  selector: '[fdListIcon], [fd-list-icon]'
+    selector: '[fdListIcon], [fd-list-icon]'
 })
 export class ListIconDirective implements OnChanges, OnInit {
 
@@ -16,7 +22,8 @@ export class ListIconDirective implements OnChanges, OnInit {
     @Input()
     class: string;
 
-    constructor(private _elementRef: ElementRef) {}
+    constructor(private _elementRef: ElementRef) {
+    }
 
     /** @hidden */
     ngOnChanges(): void {
@@ -38,7 +45,7 @@ export class ListIconDirective implements OnChanges, OnInit {
             'fd-list__icon',
             this.glyph ? 'sap-icon--' + this.glyph : '',
             this.class
-        ]
+        ];
     }
 
     /** @hidden */

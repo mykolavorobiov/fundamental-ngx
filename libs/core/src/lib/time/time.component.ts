@@ -4,18 +4,24 @@ import {
     Component,
     forwardRef,
     Input,
-    QueryList,
     OnChanges,
     OnInit,
+    QueryList,
     SimpleChanges,
     ViewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { TimeObject } from './time-object';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {
+    ControlValueAccessor,
+    NG_VALUE_ACCESSOR
+} from '@angular/forms';
 import { TimeI18n } from './i18n/time-i18n';
 import { TimeColumnConfig } from './time-column/time-column-config';
-import { TimeColumnComponent, TimeColumnItemOutput } from './time-column/time-column.component';
+import {
+    TimeColumnComponent,
+    TimeColumnItemOutput
+} from './time-column/time-column.component';
 import { KeyUtil } from '../utils/functions/key-util';
 
 export type FdTimeActiveView = 'hour' | 'minute' | 'second' | 'meridian';
@@ -132,6 +138,13 @@ export class TimeComponent implements OnInit, OnChanges, ControlValueAccessor {
     displayedHour = 0;
 
     /** @hidden */
+    constructor(
+        private _timeI18nLabels: TimeI18n,
+        private _changeDetRef: ChangeDetectorRef
+    ) {
+    }
+
+    /** @hidden */
     onChange = (time: TimeObject) => {
     };
 
@@ -153,13 +166,6 @@ export class TimeComponent implements OnInit, OnChanges, ControlValueAccessor {
     setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
         this._changeDetRef.detectChanges();
-    }
-
-    /** @hidden */
-    constructor(
-        private _timeI18nLabels: TimeI18n,
-        private _changeDetRef: ChangeDetectorRef
-    ) {
     }
 
     /** @hidden */
@@ -286,7 +292,7 @@ export class TimeComponent implements OnInit, OnChanges, ControlValueAccessor {
     displayedHourChanged(changedHourOutput: TimeColumnItemOutput): void {
         if (!this.meridian) {
             this.time.hour = changedHourOutput.value;
-            this.displayedHour = changedHourOutput.value
+            this.displayedHour = changedHourOutput.value;
         } else {
             this._periodByHoursChange(changedHourOutput.value, changedHourOutput.after);
             this.displayedHour = changedHourOutput.value;

@@ -1,22 +1,22 @@
- <div class="fd-panel__header">
+<div class="fd-panel__header">
     <div *ngIf="!fixed" class="fd-panel__expand">
         <button
-            fd-button
-            fdType="transparent"
-            class="fd-panel__button"
-            [id]="expandId"
-            [compact]="compact"
-            [class.is-expanded]="expanded"
-            [attr.aria-expanded]="expanded"
+            (click)="toggleExpand()"
             [attr.aria-controls]="panelContent?.id"
+            [attr.aria-expanded]="expanded"
             [attr.aria-label]="expandAriaLabel"
             [attr.aria-labelledby]="expandAriaLabelledBy"
-            (click)="toggleExpand()">
+            [class.is-expanded]="expanded"
+            [compact]="compact"
+            [id]="expandId"
+            class="fd-panel__button"
+            fd-button
+            fdType="transparent">
         </button>
     </div>
     <ng-content select="[fd-panel-title]"></ng-content>
     <ng-content></ng-content>
- </div>
+</div>
 
 <ng-container *ngIf="expanded || fixed">
     <ng-content select="[fd-panel-content]"></ng-content>
