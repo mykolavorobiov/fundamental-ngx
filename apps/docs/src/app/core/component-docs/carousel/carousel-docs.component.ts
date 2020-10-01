@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-
-import * as carouselSingleItemActiveTsCode from '!raw-loader!./examples/carousel-one-active-item.component.ts';
-
+import * as carouselOneActiveItemTsCode from '!raw-loader!./examples/carousel-one-active-item.component.ts';
 import { ExampleFile } from '../../../documentation/core-helpers/code-example/example-file';
 
 @Component({
@@ -13,8 +11,8 @@ export class CarouselDocsComponent {
         {
             language: 'typescript',
             fileName: 'carousel-one-active-item',
-            component: 'CarouselOneItemActiveComponent',
-            code: carouselSingleItemActiveTsCode
+            component: 'CarouselOneActiveItemComponent',
+            code: carouselOneActiveItemTsCode
         }
     ];
 }
