@@ -24,7 +24,7 @@ import {
 import { RtlService } from '../../utils/services/rtl.service';
 import { BasePopoverClass } from '../base/base-popover.class';
 import { KeyUtil } from '@fundamental-ngx/core';
-import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
+import { TemplatePortal } from '@angular/cdk/portal';
 
 let popoverUniqueId = 0;
 
@@ -143,18 +143,6 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
 
     ngAfterViewInit(): void {
         this.addTriggerListeners();
-
-        if (this.overlay) {
-            this.overlay.attach
-                .subscribe(() => {
-                    console.log('attached');
-                    console.log(this._getPositions());
-                    console.log(this.triggerOrigin.elementRef);
-                    }
-                )
-            ;
-        }
-
 
         this._changeDetectorReference.detectChanges();
     }
