@@ -3,16 +3,27 @@
     <ng-content select="fd-dropdown-control"></ng-content>
 </div>
 
-<ng-template
-             cdkConnectedOverlay
-             [cdkConnectedOverlayOpen]="isOpen"
-             [cdkConnectedOverlayOrigin]="trigger"
-             [cdkConnectedOverlayPositions]="positions"
-             [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
-             (backdropClick)="handleBackdropClick($event)"
-             (overlayKeydown)="handleKeydown($event)"
-             (overlayOutsideClick)="handleOverlayOutsideClick($event)">
+<ng-template #templateRef>
     <div class="fd-popover__body" [ngClass]="additionalBodyClass">
         <ng-content select="fd-popover-body"></ng-content>
     </div>
 </ng-template>
+
+<div #vc></div>
+
+
+
+
+<!--<ng-template-->
+<!--    cdkConnectedOverlay-->
+<!--    [cdkConnectedOverlayOpen]="isOpen"-->
+<!--    [cdkConnectedOverlayOrigin]="trigger"-->
+<!--    [cdkConnectedOverlayHasBackdrop]="true"-->
+<!--    [cdkConnectedOverlayScrollStrategy]="scrollStrategy"-->
+<!--    (backdropClick)="handleBackdropClick($event)"-->
+<!--    (overlayKeydown)="handleKeydown($event)"-->
+<!--    (overlayOutsideClick)="handleOverlayOutsideClick($event)">-->
+<!--    <div class="fd-popover__body" [ngClass]="additionalBodyClass">-->
+<!--        <ng-content select="fd-popover-body"></ng-content>-->
+<!--    </div>-->
+<!--</ng-template>-->

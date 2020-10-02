@@ -220,18 +220,19 @@ export class TimePickerComponent implements ControlValueAccessor, OnDestroy, Aft
         this.isOpen = isOpen;
         this.isOpenChange.emit(this.isOpen);
         if (isOpen) {
-            this.popover.directiveRef.loaded
-                .pipe(
-                    first(),
-                    takeUntil(this._onDestroy$),
-                    delay(0)
-                )
-                .subscribe(() => {
-                    if (!this.child.activeView) {
-                        this.child.changeActive('hour');
-                    }
-                    this.child.refreshTime();
-                });
+            if (!this.child.activeView) {
+                this.child.changeActive('hour');
+            }
+
+            // this.popover.directiveRef.loaded
+            //     .pipe(
+            //         first(),
+            //         takeUntil(this._onDestroy$),
+            //         delay(0)
+            //     )
+            //     .subscribe(() => {
+            //         this.child.refreshTime();
+            //     });
         }
     }
 

@@ -160,6 +160,7 @@ export class TimeComponent implements OnInit, OnChanges, ControlValueAccessor {
         private _timeI18nLabels: TimeI18n,
         private _changeDetRef: ChangeDetectorRef
     ) {
+        console.log('init');
     }
 
     /** @hidden */

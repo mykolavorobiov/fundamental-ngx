@@ -1,6 +1,6 @@
 <div class="docs-popover-container docs-popover-container--horizontal">
     <div class="docs-popover-element">
-        <fd-popover placement="top-start" [noArrow]="false" title="top-start">
+        <fd-cdk-popover [cdkPositions]="[{ originX: 'start', originY: 'bottom', overlayX: 'center', overlayY: 'center', weight: 100000  }]" [noArrow]="false" title="top-start">
             <fd-popover-control>
                 <button fd-button [glyph]="'navigation-up-arrow'"></button>
             </fd-popover-control>
@@ -11,10 +11,10 @@
                     </li>
                 </ul>
             </fd-popover-body>
-        </fd-popover>
+        </fd-cdk-popover>
     </div>
     <div class="docs-popover-element">
-        <fd-popover placement="top" [noArrow]="false" title="top">
+        <fd-cdk-popover [cdkPositions]="[{ originX: 'start', originY: 'bottom', overlayX: 'end', overlayY: 'bottom', weight: 100000  }]" [noArrow]="false" title="top">
             <fd-popover-control>
                 <button fd-button [glyph]="'navigation-up-arrow'"></button>
             </fd-popover-control>
@@ -25,10 +25,10 @@
                     </li>
                 </ul>
             </fd-popover-body>
-        </fd-popover>
+        </fd-cdk-popover>
     </div>
     <div class="docs-popover-element">
-        <fd-popover placement="top-end" [noArrow]="false" title="top-end">
+        <fd-cdk-popover [cdkPositions]="[{ originX: 'center', originY: 'center', overlayX: 'end', overlayY: 'bottom' }]" [noArrow]="false" title="top-end">
             <fd-popover-control>
                 <button fd-button [glyph]="'navigation-up-arrow'"></button>
             </fd-popover-control>
@@ -39,12 +39,12 @@
                     </li>
                 </ul>
             </fd-popover-body>
-        </fd-popover>
+        </fd-cdk-popover>
     </div>
 </div>
 <div class="docs-popover-container">
     <div class="docs-popover-element">
-        <fd-popover placement="left-start" [noArrow]="false" title="left-start">
+        <fd-cdk-popover [cdkPositions]="[{ originX: 'right', originY: 'top', overlayX: 'center', overlayY: 'center', weight: 100000 }]" [noArrow]="false" title="left-start">
             <fd-popover-control>
                 <button fd-button [glyph]="'navigation-left-arrow'"></button>
             </fd-popover-control>
@@ -55,10 +55,10 @@
                     </li>
                 </ul>
             </fd-popover-body>
-        </fd-popover>
+        </fd-cdk-popover>
     </div>
     <div class="docs-popover-element">
-        <fd-popover placement="right-start" [noArrow]="false" title="right-start">
+        <fd-cdk-popover [cdkPositions]="[{ originX: 'right', originY: 'top', overlayX: 'right', overlayY: 'top', weight: 100000  }]" [noArrow]="false" title="right-start">
             <fd-popover-control>
                 <button fd-button [glyph]="'navigation-right-arrow'"></button>
             </fd-popover-control>
@@ -69,12 +69,12 @@
                     </li>
                 </ul>
             </fd-popover-body>
-        </fd-popover>
+        </fd-cdk-popover>
     </div>
 </div>
 <div class="docs-popover-container">
     <div class="docs-popover-element">
-        <fd-popover placement="left" [noArrow]="false" title="left">
+        <fd-cdk-popover placement="left" [noArrow]="false" title="left">
             <fd-popover-control>
                 <button fd-button [glyph]="'navigation-left-arrow'"></button>
             </fd-popover-control>
@@ -85,10 +85,10 @@
                     </li>
                 </ul>
             </fd-popover-body>
-        </fd-popover>
+        </fd-cdk-popover>
     </div>
     <div class="docs-popover-element">
-        <fd-popover placement="right" [noArrow]="false" title="right">
+        <fd-cdk-popover placement="right" [noArrow]="false" title="right">
             <fd-popover-control>
                 <button fd-button [glyph]="'navigation-right-arrow'"></button>
             </fd-popover-control>
@@ -99,12 +99,12 @@
                     </li>
                 </ul>
             </fd-popover-body>
-        </fd-popover>
+        </fd-cdk-popover>
     </div>
 </div>
 <div class="docs-popover-container">
     <div class="docs-popover-element">
-        <fd-popover placement="left-end" [noArrow]="false" title="left-end">
+        <fd-cdk-popover placement="left-end" [noArrow]="false" title="left-end">
             <fd-popover-control>
                 <button fd-button [glyph]="'navigation-left-arrow'"></button>
             </fd-popover-control>
@@ -115,10 +115,10 @@
                     </li>
                 </ul>
             </fd-popover-body>
-        </fd-popover>
+        </fd-cdk-popover>
     </div>
     <div class="docs-popover-element">
-        <fd-popover placement="right-end" [noArrow]="false" title="right-end">
+        <fd-cdk-popover placement="right-end" [noArrow]="false" title="right-end">
             <fd-popover-control>
                 <button fd-button [glyph]="'navigation-right-arrow'"></button>
             </fd-popover-control>
@@ -129,12 +129,12 @@
                     </li>
                 </ul>
             </fd-popover-body>
-        </fd-popover>
+        </fd-cdk-popover>
     </div>
 </div>
 <div class="docs-popover-container docs-popover-container--horizontal">
     <div class="docs-popover-element">
-        <fd-popover placement="bottom-start" [noArrow]="false" title="bottom-start">
+        <fd-cdk-popover placement="bottom-start" [noArrow]="false" title="bottom-start">
             <fd-popover-control>
                 <button fd-button [glyph]="'navigation-down-arrow'"></button>
             </fd-popover-control>
@@ -145,10 +145,10 @@
                     </li>
                 </ul>
             </fd-popover-body>
-        </fd-popover>
+        </fd-cdk-popover>
     </div>
     <div class="docs-popover-element">
-        <fd-popover placement="bottom" [noArrow]="false" title="bottom">
+        <fd-cdk-popover placement="bottom" [noArrow]="false" title="bottom">
             <fd-popover-control>
                 <button fd-button [glyph]="'navigation-down-arrow'"></button>
             </fd-popover-control>
@@ -159,10 +159,10 @@
                     </li>
                 </ul>
             </fd-popover-body>
-        </fd-popover>
+        </fd-cdk-popover>
     </div>
     <div class="docs-popover-element">
-        <fd-popover placement="bottom-end" [noArrow]="false" title="bottom-end">
+        <fd-cdk-popover placement="bottom-end" [noArrow]="false" title="bottom-end">
             <fd-popover-control>
                 <button fd-button [glyph]="'navigation-down-arrow'"></button>
             </fd-popover-control>
@@ -173,6 +173,6 @@
                     </li>
                 </ul>
             </fd-popover-body>
-        </fd-popover>
+        </fd-cdk-popover>
     </div>
 </div>

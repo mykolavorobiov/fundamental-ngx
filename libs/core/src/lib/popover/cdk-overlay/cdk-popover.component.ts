@@ -1,20 +1,30 @@
 import {
-    Component,
-    Input,
-    Output,
-    EventEmitter,
-    ViewChild,
-    ViewEncapsulation,
-    ChangeDetectionStrategy,
-    HostBinding,
-    Renderer2,
     AfterViewInit,
-    ChangeDetectorRef, Optional, OnInit
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    HostBinding,
+    Input,
+    OnInit,
+    Optional,
+    Output,
+    Renderer2, TemplateRef,
+    ViewChild, ViewContainerRef,
+    ViewEncapsulation
 } from '@angular/core';
-import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
+import {
+    CdkConnectedOverlay,
+    CdkOverlayOrigin,
+    ConnectedPosition,
+    FlexibleConnectedPositionStrategy,
+    Overlay, OverlayConfig, OverlayRef,
+    ScrollStrategy
+} from '@angular/cdk/overlay';
 import { RtlService } from '../../utils/services/rtl.service';
 import { BasePopoverClass } from '../base/base-popover.class';
 import { KeyUtil } from '@fundamental-ngx/core';
+import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 
 let popoverUniqueId = 0;
 
@@ -23,6 +33,12 @@ const DefaultPositions: ConnectedPosition[] = [
     { originX: 'center', originY: 'center', overlayX: 'start', overlayY: 'top' },
     { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' }
 ]
+
+export type XPositions = 'start' | 'center' | 'end';
+export type YPositions = 'top' | 'center' | 'bottom';
+
+const yPositions: YPositions[] = ['bottom', 'center', 'top'];
+const xPositions: XPositions[] = ['start', 'center', 'end'];
 
 /**
  * The popover is a wrapping component that accepts a *control* as well as a *body*.
@@ -47,6 +63,14 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
     overlay: CdkConnectedOverlay;
 
     /** @hidden */
+    @ViewChild('templateRef', { read: TemplateRef })
+    templateRef: TemplateRef<any>;
+
+    /** @hidden */
+    @ViewChild('vc', { read: ViewContainerRef })
+    vc: ViewContainerRef;
+
+    /** @hidden */
     @ViewChild(CdkOverlayOrigin)
     triggerOrigin: CdkOverlayOrigin
 
@@ -63,7 +87,7 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
     scrollStrategy: ScrollStrategy;
 
     @Input()
-    placement;
+    placement: string;
 
     @Input()
     cdkPositions: ConnectedPosition[];
@@ -97,9 +121,11 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
     id: string = 'fd-popover-' + popoverUniqueId++;
 
     /** TODO: */
-    positions: ConnectedPosition[];
+    positions: FlexibleConnectedPositionStrategy;
 
     private eventRef: Function[] = [];
+
+    private _overlayRef: OverlayRef;
 
 
     constructor(
@@ -110,7 +136,9 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
     ) {super()}
 
     ngOnInit(): void {
-        this.positions = this._getPositions();
+        if (!this.scrollStrategy) {
+            this.scrollStrategy = this._overlay.scrollStrategies.reposition();
+        }
     }
 
     ngAfterViewInit(): void {
@@ -118,11 +146,17 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
 
         if (this.overlay) {
             this.overlay.attach
-                .subscribe(() => this.overlay.overlayRef.setDirection(
-                    this.getDirection()
-                ))
+                .subscribe(() => {
+                    console.log('attached');
+                    console.log(this._getPositions());
+                    console.log(this.triggerOrigin.elementRef);
+                    }
+                )
             ;
         }
+
+
+        this._changeDetectorReference.detectChanges();
     }
 
     debug(a): void {
@@ -145,8 +179,8 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
      */
     public close(): void {
         if (this.isOpen) {
-            console.log('close');
             this.isOpen = false;
+            this._overlayRef.dispose()
             this._changeDetectorReference.detectChanges();
             this.isOpenChange.emit(this.isOpen);
         }
@@ -156,8 +190,11 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
      * Opens the popover.
      */
     public open(): void {
+        console.log(this.positions);
         if (!this.isOpen) {
-            console.log('open');
+            this._overlayRef = this._overlay.create(this._getOverlayConfig());
+            this._overlayRef.attach(new TemplatePortal(this.templateRef, this.vc))
+
             this.isOpen = true;
             this._changeDetectorReference.detectChanges();
             this.isOpenChange.emit(this.isOpen);
@@ -241,17 +278,38 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
             return DefaultPositions;
         }
 
-        let positions: ConnectedPosition[] = [];
-
-
-        return positions;
+        return [{ originX: this._interpretPositionX(), originY: this._interpretPositionY(), overlayX: 'start', overlayY: 'top' }];
     }
 
-    private getDirection(): 'rtl' | 'ltr' {
+    private _interpretPositionY(): YPositions {
+        const position: YPositions = yPositions.find(_position => this.placement.includes(_position));
+        return position || 'top';
+    }
+
+    private _interpretPositionX(): XPositions {
+        const position: XPositions = xPositions.find(_position => this.placement.includes(_position));
+        return position || 'start';
+    }
+
+    private _getDirection(): 'rtl' | 'ltr' {
         if (!this._rtlService) {
             return 'ltr';
         }
 
         return this._rtlService.rtl.getValue() ? 'rtl' : 'ltr';
+    }
+
+    private _getOverlayConfig(): OverlayConfig {
+        const direction = this._getDirection();
+        const position = this._overlay
+            .position()
+            .flexibleConnectedTo(this.triggerOrigin.elementRef)
+            .withPositions(this._getPositions())
+            .withPush(false);
+        return new OverlayConfig({
+            direction: direction,
+            positionStrategy: position,
+            scrollStrategy: this.scrollStrategy
+        })
     }
 }
