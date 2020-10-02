@@ -5,11 +5,11 @@ import {
     Component,
     EventEmitter,
     HostBinding,
-    Input,
+    Input, OnChanges, OnDestroy,
     OnInit,
     Optional,
     Output,
-    Renderer2, TemplateRef,
+    Renderer2, SimpleChanges, TemplateRef,
     ViewChild, ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
@@ -25,6 +25,8 @@ import { RtlService } from '../../utils/services/rtl.service';
 import { BasePopoverClass } from '../base/base-popover.class';
 import { KeyUtil } from '@fundamental-ngx/core';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { merge, Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 
 let popoverUniqueId = 0;
 
@@ -56,7 +58,7 @@ const xPositions: XPositions[] = ['start', 'center', 'end'];
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CdkPopoverComponent extends BasePopoverClass implements AfterViewInit, OnInit {
+export class CdkPopoverComponent extends BasePopoverClass implements AfterViewInit, OnInit, OnDestroy, OnChanges {
 
     /** @hidden */
     @ViewChild(CdkConnectedOverlay)
@@ -67,8 +69,8 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
     templateRef: TemplateRef<any>;
 
     /** @hidden */
-    @ViewChild('vc', { read: ViewContainerRef })
-    vc: ViewContainerRef;
+    @ViewChild('container', { read: ViewContainerRef })
+    container: ViewContainerRef;
 
     /** @hidden */
     @ViewChild(CdkOverlayOrigin)
@@ -127,6 +129,9 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
 
     private _overlayRef: OverlayRef;
 
+    /** An RxJS Subject that will kill the data stream upon component’s destruction (for unsubscribing)  */
+    private readonly _onDestroy$: Subject<void> = new Subject<void>();
+
 
     constructor(
         private _renderer: Renderer2,
@@ -143,8 +148,24 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
 
     ngAfterViewInit(): void {
         this.addTriggerListeners();
+    }
 
-        this._changeDetectorReference.detectChanges();
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['isOpen']) {
+            if (changes['isOpen'].currentValue) {
+                this.open();
+            } else {
+                this.close();
+            }
+        }
+    }
+
+    ngOnDestroy(): void {
+        this._onDestroy$.next();
+        this._onDestroy$.complete();
+        if (this._overlayRef) {
+            this._overlayRef.detach()
+        }
     }
 
     debug(a): void {
@@ -168,6 +189,7 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
     public close(): void {
         if (this.isOpen) {
             this.isOpen = false;
+            console.log('close');
             this._overlayRef.dispose()
             this._changeDetectorReference.detectChanges();
             this.isOpenChange.emit(this.isOpen);
@@ -178,14 +200,18 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
      * Opens the popover.
      */
     public open(): void {
-        console.log(this.positions);
         if (!this.isOpen) {
             this._overlayRef = this._overlay.create(this._getOverlayConfig());
-            this._overlayRef.attach(new TemplatePortal(this.templateRef, this.vc))
+            this._overlayRef.attach(new TemplatePortal(this.templateRef, this.container))
+
+            console.log('open');
+            console.log(this._overlayRef);
 
             this.isOpen = true;
             this._changeDetectorReference.detectChanges();
+
             this.isOpenChange.emit(this.isOpen);
+            this._listenOnOutClicks();
         }
     }
 
@@ -215,26 +241,26 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
         }
     }
 
+    private _listenOnOutClicks(): void {
+        /** Merge observables */
+        const refreshObs = merge(this.isOpenChange, this._onDestroy$);
 
+        this._overlayRef.backdropClick().pipe(
+            filter(event => this._shouldClose(event)),
+            takeUntil(refreshObs)
+        ).subscribe(() => this.close());
 
-    handleBackdropClick(event: MouseEvent): void {
-        console.log(event);
-        console.log('backdrop click');
-        if (this.closeOnOutsideClick) {
-            this.close();
-        }
-    }
-
-    handleOverlayOutsideClick(event: MouseEvent): void {
-        if (this._shouldClose(event)) {
-            this.close();
-        }
+        this._overlayRef._outsidePointerEvents.pipe(
+            filter(() => this.closeOnOutsideClick),
+            takeUntil(refreshObs)
+        ).subscribe(() => this.close());
     }
 
     private addTriggerListeners(): void {
         if (this.triggers && this.triggers.length > 0) {
             this.triggers.forEach(trigger => {
                 this.eventRef.push(this._renderer.listen(this.triggerOrigin.elementRef.nativeElement, trigger, () => {
+                    console.log('toggle');
                     this.toggle();
                 }));
             });
@@ -266,17 +292,47 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
             return DefaultPositions;
         }
 
-        return [{ originX: this._interpretPositionX(), originY: this._interpretPositionY(), overlayX: 'start', overlayY: 'top' }];
+        const xPosition = this._interpretPositionX();
+        const yPosition = this._interpretPositionY();
+        const overlayYPosition = this._getOppositePositionY(yPosition);
+        const overlayXPosition = this._getOppositePositionX(xPosition);
+
+        return [{
+            originX: xPosition,
+            originY: yPosition,
+            overlayX: xPosition,
+            overlayY: yPosition
+        }];
+    }
+
+    private _getOppositePositionX(position: XPositions): XPositions {
+        if (position === 'start') {
+            return 'end'
+        }
+        if (position === 'end') {
+            return 'start'
+        }
+        return position;
+    }
+
+    private _getOppositePositionY(position: YPositions): YPositions {
+        if (position === 'top') {
+            return 'bottom'
+        }
+        if (position === 'bottom') {
+            return 'top'
+        }
+        return position;
     }
 
     private _interpretPositionY(): YPositions {
         const position: YPositions = yPositions.find(_position => this.placement.includes(_position));
-        return position || 'top';
+        return position || 'center';
     }
 
     private _interpretPositionX(): XPositions {
         const position: XPositions = xPositions.find(_position => this.placement.includes(_position));
-        return position || 'start';
+        return position || 'center';
     }
 
     private _getDirection(): 'rtl' | 'ltr' {

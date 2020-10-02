@@ -15,10 +15,8 @@ export class CdkPopoverService {
     private _overlayRef: OverlayRef;
 
     open(overlayConfig: OverlayConfig): void {
-        this._overlayRef = this._overlay.create(overlayConfig);
-        this._overlayRef.attach(new TemplatePortal(this.templateRef, this.vc))
     }
 
-    close()
+    // close()
 
 }
