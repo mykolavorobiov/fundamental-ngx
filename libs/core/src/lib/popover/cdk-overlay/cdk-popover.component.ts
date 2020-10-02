@@ -5,19 +5,24 @@ import {
     EventEmitter,
     ViewChild,
     ViewEncapsulation,
-    ContentChild,
     ChangeDetectionStrategy,
-    HostBinding, Renderer2, ElementRef, AfterViewInit, ChangeDetectorRef
+    HostBinding,
+    Renderer2,
+    AfterViewInit,
+    ChangeDetectorRef, Optional, OnInit
 } from '@angular/core';
-import { Placement, PopperOptions } from 'popper.js';
-import { PopoverDirective, PopoverFillMode } from './popover-directive/popover.directive';
-import { PopoverDropdownComponent } from './popover-dropdown/popover-dropdown.component';
-import { ConnectedPosition, FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay/position/flexible-connected-position-strategy';
-import { CdkConnectedOverlay, CdkOverlayOrigin, Overlay, ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
-import { KeyUtil } from '../utils/functions/key-util';
-import { BasePopoverClass } from './base/base-popover.class';
+import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
+import { RtlService } from '../../utils/services/rtl.service';
+import { BasePopoverClass } from '../base/base-popover.class';
+import { KeyUtil } from '@fundamental-ngx/core';
 
 let popoverUniqueId = 0;
+
+const DefaultPositions: ConnectedPosition[] = [
+    { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' },
+    { originX: 'center', originY: 'center', overlayX: 'start', overlayY: 'top' },
+    { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' }
+]
 
 /**
  * The popover is a wrapping component that accepts a *control* as well as a *body*.
@@ -26,9 +31,8 @@ let popoverUniqueId = 0;
  * PopoverComponent is an abstraction of PopoverDirective.
  */
 @Component({
-    selector: 'fd-popover',
-    templateUrl: './popover.component.html',
-    styleUrls: ['./popover.component.scss'],
+    selector: 'fd-cdk-popover',
+    templateUrl: './cdk-popover.component.html',
     host: {
         '[class.fd-popover-custom]': 'true',
         '[attr.id]': 'id'
@@ -36,18 +40,13 @@ let popoverUniqueId = 0;
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverComponent extends BasePopoverClass implements AfterViewInit {
-    /** @hidden */
-    @ViewChild(PopoverDirective)
-    directiveRef: PopoverDirective;
+export class CdkPopoverComponent extends BasePopoverClass implements AfterViewInit, OnInit {
 
     /** @hidden */
     @ViewChild(CdkConnectedOverlay)
     overlay: CdkConnectedOverlay;
 
     /** @hidden */
-    @ContentChild(PopoverDropdownComponent) dropdownComponent: PopoverDropdownComponent;
-
     @ViewChild(CdkOverlayOrigin)
     triggerOrigin: CdkOverlayOrigin
 
@@ -60,20 +59,14 @@ export class PopoverComponent extends BasePopoverClass implements AfterViewInit 
     @Input()
     appendTo: HTMLElement | 'body';
 
-    /** The placement of the popover. It can be one of: top, top-start, top-end, bottom,
-     *  bottom-start, bottom-end, right, right-start, right-end, left, left-start, left-end. */
-    @Input()
-    placement: Placement = 'bottom-start';
-
     @Input()
     scrollStrategy: ScrollStrategy;
 
     @Input()
-    positions: ConnectedPosition[] = [
-        { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' },
-        { originX: 'center', originY: 'center', overlayX: 'start', overlayY: 'top' },
-        { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' }
-    ]
+    placement;
+
+    @Input()
+    cdkPositions: ConnectedPosition[];
 
     /** Whether the popover is open. Can be used through two-way binding. */
     @Input()
@@ -83,32 +76,9 @@ export class PopoverComponent extends BasePopoverClass implements AfterViewInit 
     @Input()
     additionalClasses: string[] = [];
 
-    /** The Popper.js options to attach to this popover.
-     * See the [Popper.js Documentation](https://popper.js.org/popper-documentation.html) for details. */
-    @Input()
-    options: PopperOptions = {
-        placement: 'bottom-start',
-        modifiers: {
-            preventOverflow: {
-                enabled: true,
-                escapeWithReference: true,
-                boundariesElement: 'scrollParent'
-            }
-        }
-    };
-
     /** Whether the popover should be focusTrapped. */
     @Input()
     focusTrapped = false;
-
-    /**
-     * Preset options for the popover body width.
-     * * `at-least` will apply a minimum width to the body equivalent to the width of the control.
-     * * `equal` will apply a width to the body equivalent to the width of the control.
-     * * Leave blank for no effect.
-     */
-    @Input()
-    fillControlMode: PopoverFillMode;
 
     /** Whether the popover should close when a click is made outside its boundaries. */
     @Input()
@@ -126,21 +96,32 @@ export class PopoverComponent extends BasePopoverClass implements AfterViewInit 
     @Input()
     id: string = 'fd-popover-' + popoverUniqueId++;
 
+    /** TODO: */
+    positions: ConnectedPosition[];
+
     private eventRef: Function[] = [];
 
 
     constructor(
         private _renderer: Renderer2,
         private _changeDetectorReference: ChangeDetectorRef,
-        private _overlay: Overlay
-    ) { super(); }
+        private _overlay: Overlay,
+        @Optional() private _rtlService: RtlService
+    ) {super()}
+
+    ngOnInit(): void {
+        this.positions = this._getPositions();
+    }
 
     ngAfterViewInit(): void {
         this.addTriggerListeners();
 
         if (this.overlay) {
             this.overlay.attach
-                .subscribe(() => this.overlay.overlayRef.setDirection('ltr'));
+                .subscribe(() => this.overlay.overlayRef.setDirection(
+                    this.getDirection()
+                ))
+            ;
         }
     }
 
@@ -195,7 +176,6 @@ export class PopoverComponent extends BasePopoverClass implements AfterViewInit 
      */
     public openChanged(isOpen: boolean): void {
         this.isOpenChange.emit(isOpen);
-        this.updateDropdownIsOpen(isOpen);
     }
 
     /** Method that is called, when there is keydown event dispatched */
@@ -226,15 +206,6 @@ export class PopoverComponent extends BasePopoverClass implements AfterViewInit 
         }
     }
 
-    /** @hidden
-     *  Function that allows us to control aria-expanded on dropdown child
-     * */
-    private updateDropdownIsOpen(isOpen: boolean): void {
-        if (this.dropdownComponent) {
-            this.dropdownComponent.isOpen = isOpen;
-        }
-    }
-
     private addTriggerListeners(): void {
         if (this.triggers && this.triggers.length > 0) {
             this.triggers.forEach(trigger => {
@@ -258,5 +229,29 @@ export class PopoverComponent extends BasePopoverClass implements AfterViewInit 
             this.closeOnOutsideClick &&
             !this._triggerContainsTarget(event)
         );
+    }
+
+    /** @hidden */
+    private _getPositions(): ConnectedPosition[] {
+        if (this.cdkPositions) {
+            return this.cdkPositions
+        }
+
+        if (!this.placement) {
+            return DefaultPositions;
+        }
+
+        let positions: ConnectedPosition[] = [];
+
+
+        return positions;
+    }
+
+    private getDirection(): 'rtl' | 'ltr' {
+        if (!this._rtlService) {
+            return 'ltr';
+        }
+
+        return this._rtlService.rtl.getValue() ? 'rtl' : 'ltr';
     }
 }
