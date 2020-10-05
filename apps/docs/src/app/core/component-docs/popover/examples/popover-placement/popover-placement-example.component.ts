@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { XPositions, YPositions } from '@fundamental-ngx/core';
+import { ConnectionPositionPair } from '@angular/cdk/overlay';
 
 @Component({
     selector: 'fd-popover-placement-example',
@@ -16,8 +17,19 @@ export class PopoverPlacementExampleComponent {
     yPositions: YPositions[] = ['bottom', 'center', 'top'];
     xPositions: XPositions[] = ['start', 'center', 'end'];
 
-    xOverlay = 'center';
-    yOverlay = 'center';
-    xBackdrop = 'center';
-    yBackdrop = 'center';
+    originX: XPositions = 'center';
+    originY: YPositions = 'center';
+    overlayX: XPositions = 'center';
+    overlayY: YPositions = 'center';
+
+    cdkPosition: ConnectionPositionPair[]
+
+    refresh(): void {
+        this.cdkPosition = [{
+            originX: this.originX,
+            originY: this.originY,
+            overlayX: this.overlayX,
+            overlayY: this.overlayY
+        }]
+    }
 }

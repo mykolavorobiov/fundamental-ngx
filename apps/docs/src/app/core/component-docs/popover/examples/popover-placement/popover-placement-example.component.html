@@ -1,17 +1,37 @@
 <div>
-    <fd-select placeholder="xOverlay" [(value)]="xOverlay">
+    <fd-select placeholder="xOverlay" [(value)]="originX">
         <fd-option *ngFor="let option of xPositions" [value]="option">{{option}}</fd-option>
     </fd-select>
-    <fd-select placeholder="yOverlay" [(value)]="yOverlay">
+    <fd-select placeholder="yOverlay" [(value)]="originY">
         <fd-option *ngFor="let option of yPositions" [value]="option">{{option}}</fd-option>
     </fd-select>
-    <fd-select placeholder="xBackdrop" [(value)]="xBackdrop">
+    <fd-select placeholder="xBackdrop" [(value)]="overlayX">
         <fd-option *ngFor="let option of xPositions" [value]="option">{{option}}</fd-option>
     </fd-select>
-    <fd-select placeholder="yBackdrop" [(value)]="yBackdrop">
+    <fd-select placeholder="yBackdrop" [(value)]="overlayY">
         <fd-option *ngFor="let option of yPositions" [value]="option">{{option}}</fd-option>
     </fd-select>
+
+    <button fd-button (click)="refresh()">refresh</button>
 </div>
+
+
+<br><br>
+
+<fd-cdk-popover [cdkPositions]="cdkPosition" [noArrow]="false" title="top-start">
+    <fd-popover-control>
+        <button fd-button [glyph]="'navigation-up-arrow'"></button>
+    </fd-popover-control>
+    <fd-popover-body>
+        <ul fd-list>
+            <li fd-list-item *ngFor="let option of list">
+                <a [attr.href]="option.url" fd-list-title>{{ option.text }}</a>
+            </li>
+        </ul>
+    </fd-popover-body>
+</fd-cdk-popover>
+
+<br><br>
 
 <div class="docs-popover-container docs-popover-container--horizontal">
     <div class="docs-popover-element">

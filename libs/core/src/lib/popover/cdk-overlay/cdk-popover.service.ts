@@ -1,8 +1,11 @@
-import { ChangeDetectorRef, Optional, Renderer2 } from '@angular/core';
+import { InjectionToken, Optional } from '@angular/core';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
-import { RtlService } from '@fundamental-ngx/core';
-import { TemplatePortal } from '@angular/cdk/portal';
+import { MobileModeConfig, RtlService } from '@fundamental-ngx/core';
 import { Subject } from 'rxjs';
+
+const OVERLAY_CONFIG = new InjectionToken<OverlayConfig>('CDK Overlay Config');
+
+
 
 export class CdkPopoverService {
     constructor(
@@ -14,9 +17,6 @@ export class CdkPopoverService {
 
     private _overlayRef: OverlayRef;
 
-    open(overlayConfig: OverlayConfig): void {
-    }
-
-    // close()
+    open(overlayConfig: OverlayConfig): void {}
 
 }

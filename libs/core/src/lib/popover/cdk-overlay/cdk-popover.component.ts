@@ -53,11 +53,11 @@ const xPositions: XPositions[] = ['start', 'center', 'end'];
     templateUrl: './cdk-popover.component.html',
     host: {
         '[class.fd-popover-custom]': 'true',
-        '[class.fd-popover]': 'true',
         '[attr.id]': 'id'
     },
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['./cdk-popover.component.scss']
 })
 export class CdkPopoverComponent extends BasePopoverClass implements AfterViewInit, OnInit, OnDestroy, OnChanges {
 
@@ -90,34 +90,14 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
     scrollStrategy: ScrollStrategy;
 
     @Input()
-    placement: string;
-
-    @Input()
     cdkPositions: ConnectedPosition[];
 
-    /** Whether the popover is open. Can be used through two-way binding. */
     @Input()
-    isOpen = false;
-
-    /** List of additional classes that will be added to popover container element */
-    @Input()
-    additionalClasses: string[] = [];
+    placement: string;
 
     /** Whether the popover should be focusTrapped. */
     @Input()
     focusTrapped = false;
-
-    /** Whether the popover should close when a click is made outside its boundaries. */
-    @Input()
-    closeOnOutsideClick = true;
-
-    /** Whether the popover should close when the escape key is pressed. */
-    @Input()
-    closeOnEscapeKey = true;
-
-    /** Event emitted when the state of the isOpen property changes. */
-    @Output()
-    isOpenChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     /** Id of the popover. If none is provided, one will be generated. */
     @Input()
@@ -190,10 +170,10 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
      * Closes the popover.
      */
     public close(): void {
-        console.log('appendedClose');
         if (this._overlayRef && this._overlayRef.hasAttached()) {
+            console.log('close');
             this.isOpen = false;
-            this._overlayRef.detach();
+            this._overlayRef.dispose();
             this._changeDetectorReference.detectChanges();
             this.isOpenChange.emit(this.isOpen);
         }
@@ -203,8 +183,9 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
      * Opens the popover.
      */
     public open(): void {
-        this._overlayRef = this._overlay.create(this._getOverlayConfig());
-        if (this._overlayRef && !this._overlayRef.hasAttached()) {
+        if (!this._overlayRef || !this._overlayRef.hasAttached()) {
+            console.log('open');
+            this._overlayRef = this._overlay.create(this._getOverlayConfig());
             this._overlayRef.attach(new TemplatePortal(this.templateRef, this.container));
 
             this.isOpen = true;
@@ -213,13 +194,6 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
             this.isOpenChange.emit(this.isOpen);
             this._listenOnOutClicks();
         }
-    }
-
-    /**
-     * Forces an update of the popover's positioning calculation.
-     */
-    public updatePopover(): void {
-        // this.directiveRef.updatePopper();
     }
 
     /**
@@ -298,8 +272,8 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
         return [{
             originX: xPosition,
             originY: yPosition,
-            overlayX: 'center',
-            overlayY: 'center'
+            overlayX: xPosition,
+            overlayY: yPosition
         }];
     }
 
@@ -343,6 +317,7 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
 
     private _getOverlayConfig(): OverlayConfig {
         const direction = this._getDirection();
+        console.log(this._getPositions());
         const position = this._overlay
             .position()
             .flexibleConnectedTo(this.triggerOrigin.elementRef)
