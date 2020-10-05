@@ -7,15 +7,11 @@ import {
     ViewEncapsulation,
     ContentChild,
     ChangeDetectionStrategy,
-    HostBinding, Renderer2, ElementRef, AfterViewInit, ChangeDetectorRef
+    HostBinding
 } from '@angular/core';
 import { Placement, PopperOptions } from 'popper.js';
 import { PopoverDirective, PopoverFillMode } from './popover-directive/popover.directive';
 import { PopoverDropdownComponent } from './popover-dropdown/popover-dropdown.component';
-import { ConnectedPosition, FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay/position/flexible-connected-position-strategy';
-import { CdkConnectedOverlay, CdkOverlayOrigin, Overlay, ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
-import { KeyUtil } from '../utils/functions/key-util';
-import { BasePopoverClass } from './base/base-popover.class';
 
 let popoverUniqueId = 0;
 
@@ -36,44 +32,46 @@ let popoverUniqueId = 0;
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverComponent extends BasePopoverClass implements AfterViewInit {
+export class PopoverComponent {
     /** @hidden */
     @ViewChild(PopoverDirective)
     directiveRef: PopoverDirective;
 
     /** @hidden */
-    @ViewChild(CdkConnectedOverlay)
-    overlay: CdkConnectedOverlay;
-
-    /** @hidden */
     @ContentChild(PopoverDropdownComponent) dropdownComponent: PopoverDropdownComponent;
 
-    @ViewChild(CdkOverlayOrigin)
-    triggerOrigin: CdkOverlayOrigin
+    /** Whether the popover should have an arrow. */
+    @Input()
+    noArrow = true;
+
+    /** Whether the popover container needs an extra class for styling. */
+    @Input()
+    addContainerClass: string;
 
     /** Whether the popover is disabled. */
     @Input()
     @HostBinding('class.fd-popover-custom--disabled')
     disabled = false;
 
+    /** @deprecated
+     * Left for backward compatibility. It's going to be removed on 0.20.0
+     */
+    @Input()
+    isDropdown = false;
+
     /** The element to which the popover should be appended. */
     @Input()
     appendTo: HTMLElement | 'body';
+
+    /** The trigger events that will open/close the popover.
+     *  Accepts any [HTML DOM Events](https://www.w3schools.com/jsref/dom_obj_event.asp). */
+    @Input()
+    triggers: string[] = ['click'];
 
     /** The placement of the popover. It can be one of: top, top-start, top-end, bottom,
      *  bottom-start, bottom-end, right, right-start, right-end, left, left-start, left-end. */
     @Input()
     placement: Placement = 'bottom-start';
-
-    @Input()
-    scrollStrategy: ScrollStrategy;
-
-    @Input()
-    positions: ConnectedPosition[] = [
-        { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' },
-        { originX: 'center', originY: 'center', overlayX: 'start', overlayY: 'top' },
-        { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' }
-    ]
 
     /** Whether the popover is open. Can be used through two-way binding. */
     @Input()
@@ -126,28 +124,6 @@ export class PopoverComponent extends BasePopoverClass implements AfterViewInit 
     @Input()
     id: string = 'fd-popover-' + popoverUniqueId++;
 
-    private eventRef: Function[] = [];
-
-
-    constructor(
-        private _renderer: Renderer2,
-        private _changeDetectorReference: ChangeDetectorRef,
-        private _overlay: Overlay
-    ) { super(); }
-
-    ngAfterViewInit(): void {
-        this.addTriggerListeners();
-
-        if (this.overlay) {
-            this.overlay.attach
-                .subscribe(() => this.overlay.overlayRef.setDirection('ltr'));
-        }
-    }
-
-    debug(a): void {
-        console.log(a.scrollStrategy);
-    }
-
     /**
      * Toggles the popover open state.
      */
@@ -164,9 +140,7 @@ export class PopoverComponent extends BasePopoverClass implements AfterViewInit 
      */
     public close(): void {
         if (this.isOpen) {
-            console.log('close');
             this.isOpen = false;
-            this._changeDetectorReference.detectChanges();
             this.isOpenChange.emit(this.isOpen);
         }
     }
@@ -176,9 +150,7 @@ export class PopoverComponent extends BasePopoverClass implements AfterViewInit 
      */
     public open(): void {
         if (!this.isOpen) {
-            console.log('open');
             this.isOpen = true;
-            this._changeDetectorReference.detectChanges();
             this.isOpenChange.emit(this.isOpen);
         }
     }
@@ -187,7 +159,7 @@ export class PopoverComponent extends BasePopoverClass implements AfterViewInit 
      * Forces an update of the popover's positioning calculation.
      */
     public updatePopover(): void {
-        // this.directiveRef.updatePopper();
+        this.directiveRef.updatePopper();
     }
 
     /**
@@ -200,29 +172,8 @@ export class PopoverComponent extends BasePopoverClass implements AfterViewInit 
 
     /** Method that is called, when there is keydown event dispatched */
     public handleKeydown(event: KeyboardEvent): void {
-        if (KeyUtil.isKey(event, 'ArrowDown') && event.altKey) {
+        if (event.key === 'ArrowDown' && event.altKey) {
             this.open();
-        }
-
-        if (KeyUtil.isKey(event, 'Escape') && this.closeOnEscapeKey) {
-            console.log('escape');
-            this.close();
-        }
-    }
-
-
-
-    handleBackdropClick(event: MouseEvent): void {
-        console.log(event);
-        console.log('backdrop click');
-        if (this.closeOnOutsideClick) {
-            this.close();
-        }
-    }
-
-    handleOverlayOutsideClick(event: MouseEvent): void {
-        if (this._shouldClose(event)) {
-            this.close();
         }
     }
 
@@ -233,30 +184,5 @@ export class PopoverComponent extends BasePopoverClass implements AfterViewInit 
         if (this.dropdownComponent) {
             this.dropdownComponent.isOpen = isOpen;
         }
-    }
-
-    private addTriggerListeners(): void {
-        if (this.triggers && this.triggers.length > 0) {
-            this.triggers.forEach(trigger => {
-                this.eventRef.push(this._renderer.listen(this.triggerOrigin.elementRef.nativeElement, trigger, () => {
-                    this.toggle();
-                }));
-            });
-        }
-    }
-
-    /** @hidden */
-    private _triggerContainsTarget(event: Event): boolean {
-        const triggerElement = this.triggerOrigin.elementRef.nativeElement;
-        return triggerElement.contains(event.composedPath()[0]);
-    }
-
-    /** @hidden */
-    private _shouldClose(event: MouseEvent): boolean {
-        return (
-            this.isOpen &&
-            this.closeOnOutsideClick &&
-            !this._triggerContainsTarget(event)
-        );
     }
 }
