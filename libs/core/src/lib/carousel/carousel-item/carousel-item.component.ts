@@ -2,10 +2,8 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ElementRef,
     HostBinding,
     Input,
-    Renderer2,
     ViewEncapsulation
 } from '@angular/core';
 
@@ -24,6 +22,18 @@ export class CarouselItemComponent {
     @HostBinding('attr.id')
     id = `fd-carousel-item-${carouselItemUniqueId++}`;
 
+    /** Sets aria-label attribute for carousel item */
+    @Input()
+    ariaLabel: string;
+
+    /** Sets aria-labelledby attribute for carousel item */
+    @Input()
+    ariaLabelledBy: string;
+
+    /** Sets aria-describedby attribute for carousel item */
+    @Input()
+    ariaDescribedBy: string;
+
     /** Value of carousel item */
     @Input()
     value: any;
@@ -32,17 +42,14 @@ export class CarouselItemComponent {
     @Input()
     title: string;
 
-    /** @hidden Display mode of carousel item. By default it is hidden from dom.*/
-    displayMode = 'none';
+    /** Display mode of carousel item. By default it is hidden.*/
+    @Input()
+    isActive = false;
 
     /** @hidden sets margin */
     setMargin: boolean;
 
-    constructor(
-        private readonly _changeDetectorRef: ChangeDetectorRef,
-        private readonly _elementRef: ElementRef,
-        private readonly _renderer: Renderer2
-    ) {}
+    constructor(private readonly _changeDetectorRef: ChangeDetectorRef) {}
 
     /** Add right margin to carousel item. */
     public addMargin(): void {
@@ -58,13 +65,13 @@ export class CarouselItemComponent {
 
     /** Shows carousel item */
     public showItem(): void {
-        this.displayMode = 'block';
+        this.isActive = true;
         this._changeDetectorRef.markForCheck();
     }
 
     /** Hides carousel item */
     public hideItem(): void {
-        this.displayMode = 'none';
+        this.isActive = false;
         this._changeDetectorRef.markForCheck();
     }
 }

@@ -7,6 +7,11 @@ import { API_FILES } from '../../api-files';
 import { CarouselHeaderComponent } from './carousel-header/carousel-header.component';
 import { CarouselDocsComponent } from './carousel-docs.component';
 import { CarouselOneActiveItemComponent } from './examples/carousel-one-active-item.component';
+import { CarouselNoPageIndicatorComponent } from './examples/carousel-no-page-indicator.component';
+import { CarouselMultipleActiveItemComponent } from './examples/carousel-multiple-active-item.component';
+import { CarouselHiddenNavigationComponent } from './examples/carousel-hidden-navigation.component';
+import { CarouselContentNavigationComponent } from './examples/carousel-content-navigation.component';
+import { CarouselLoopedNavigationComponent } from './examples/carousel-looped-navigation.component';
 
 const routes: Routes = [
     {
@@ -14,14 +19,23 @@ const routes: Routes = [
         component: CarouselHeaderComponent,
         children: [
             { path: '', component: CarouselDocsComponent },
-            { path: 'api', component: ApiComponent, data: { content: API_FILES.checkbox } }
+            { path: 'api', component: ApiComponent, data: { content: API_FILES.carousel } }
         ]
     }
 ];
 
 @NgModule({
-    imports: [CarouselNewModule, RouterModule.forChild(routes), SharedDocumentationPageModule],
+    imports: [RouterModule.forChild(routes), SharedDocumentationPageModule, CarouselNewModule],
     exports: [RouterModule],
-    declarations: [CarouselDocsComponent, CarouselHeaderComponent, CarouselOneActiveItemComponent]
+    declarations: [
+        CarouselDocsComponent,
+        CarouselHeaderComponent,
+        CarouselOneActiveItemComponent,
+        CarouselMultipleActiveItemComponent,
+        CarouselNoPageIndicatorComponent,
+        CarouselHiddenNavigationComponent,
+        CarouselContentNavigationComponent,
+        CarouselLoopedNavigationComponent
+    ]
 })
 export class CarouselDocsModule {}

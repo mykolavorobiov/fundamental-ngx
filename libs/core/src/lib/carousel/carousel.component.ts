@@ -4,6 +4,7 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChildren,
+    ElementRef,
     EventEmitter,
     HostBinding,
     Input,
@@ -19,24 +20,11 @@ import { takeUntil } from 'rxjs/operators';
 import { RtlService } from '../utils/services/rtl.service';
 import { CarouselItemComponent } from './carousel-item/carousel-item.component';
 
-/**
- * Pending features:
- * 1. Looping -Done without multi item display
- * 2. multi item display - Done
- * 3. Error message - Done
- * 4. service creation - NA
- * 5. aria-label/accessibility
- * 6. code cleanup -Done
- * 7. touch device
- * 8. unit test cases
- * 9. Rtl- Done
- */
-
 const ICON_PAGE_INDICATOR_LIMIT = 8;
 let carouselUniqueId = 0;
 
 class CarouselActiveItem {
-    constructor(public readonly activeItem: CarouselItemComponent, public readonly slideDirection: -1 | 1) {}
+    constructor(public readonly activeItem: CarouselItemComponent, public readonly slideDirection: number) {}
 }
 
 @Component({
@@ -56,6 +44,26 @@ export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
     @HostBinding('attr.id')
     id = `fd-carousel-${carouselUniqueId++}`;
 
+    /** Sets aria-label attribute for carousel */
+    @Input()
+    ariaLabel: string;
+
+    /** Sets aria-labelledby attribute for carousel */
+    @Input()
+    ariaLabelledBy: string;
+
+    /** Sets aria-describedby attribute for carousel */
+    @Input()
+    ariaDescribedBy: string;
+
+    /** Label for left navigation button */
+    @Input()
+    leftNavigationBtnLabel = 'Go to previous item';
+
+    /** Label for right navigation button*/
+    @Input()
+    rightNavigationBtnLabel = 'Go to next item';
+
     /** Start position for visible items. Starts with position 0 */
     @Input()
     visibleItemsStartPosition = 0;
@@ -63,14 +71,6 @@ export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
     /** Number of items to be visible at a time */
     @Input()
     visibleItemsCount = 1;
-
-    /** Width of carousel container */
-    @Input()
-    width: string;
-
-    /** Height of carousel container */
-    @Input()
-    height: string;
 
     /** Shows/hides optional page indicator container  */
     @Input()
@@ -96,13 +96,9 @@ export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
     @Input()
     isCircular = false;
 
-    /** Display this error message when no item is loaded */
-    @Input()
-    errorMessage = 'The content could not be loaded';
-
     /** Event thrown, when active element is changed */
     @Output()
-    readonly activeChange: EventEmitter<CarouselActiveItem>;
+    readonly activeChange: EventEmitter<CarouselActiveItem> = new EventEmitter<CarouselActiveItem>();
 
     /** @hidden Make left navigation button disabled */
     leftButtonDisabled = false;
@@ -129,7 +125,10 @@ export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
     /** An RxJS Subject that will kill the data stream upon component’s destruction (for unsubscribing)  */
     private readonly _onDestroy$: Subject<void> = new Subject<void>();
 
-    constructor(private readonly _changeDetector: ChangeDetectorRef, @Optional() private _rtlService: RtlService) {}
+    constructor(
+        private readonly _changeDetectorRef: ChangeDetectorRef,
+        @Optional() private readonly _rtlService: RtlService
+    ) {}
 
     /** @hidden */
     ngOnInit(): void {
@@ -150,7 +149,7 @@ export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
         if (this.items.length > ICON_PAGE_INDICATOR_LIMIT) {
             this.numericIndicator = true;
         }
-        this._changeDetector.markForCheck();
+        this._changeDetectorRef.markForCheck();
     }
 
     /** @hidden */
@@ -160,7 +159,7 @@ export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     /** Shows/hides slide based on direction */
-    public setCurrentSlide(slideDirection: -1 | 1): void {
+    public setCurrentSlide(slideDirection: number): void {
         if (slideDirection === -1) {
             // Moving to previous slide
             this.rightButtonDisabled = false;
@@ -174,18 +173,19 @@ export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
             this._adjustActiveItemPosition(slideDirection);
             this._showSlide(slideDirection);
         }
+        this._changeDetectorRef.markForCheck();
     }
 
     /** @hidden Rtl change subscription */
     private _subscribeToRtl(): void {
-        this._rtlService.rtl.pipe(takeUntil(this._onDestroy$)).subscribe((isRtl: boolean) => {
+        this._rtlService?.rtl.pipe(takeUntil(this._onDestroy$)).subscribe((isRtl: boolean) => {
             this.dir = isRtl ? 'rtl' : 'ltr';
-            this._changeDetector.detectChanges();
+            this._changeDetectorRef.detectChanges();
         });
     }
 
     /** @hidden Add new visible item to carousel */
-    private _showSlide(slideDirection: -1 | 1): void {
+    private _showSlide(slideDirection: number): void {
         let slidePositionToShow: number;
 
         if (slideDirection === -1) {
@@ -196,6 +196,8 @@ export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
 
         // Show left slide of previous first visible slide
         this.items.toArray()[slidePositionToShow].showItem();
+
+        this.activeChange.emit(new CarouselActiveItem(this.items.toArray()[slidePositionToShow], slideDirection));
 
         // Add margin between visible items
         if (this.visibleItemsCount > 1) {
@@ -208,7 +210,7 @@ export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     /** @hidden When moved left, hide the right most slide */
-    private _hideSlide(slideDirection: -1 | 1): void {
+    private _hideSlide(slideDirection: number): void {
         let slidePositionToHide: number;
 
         if (slideDirection === -1) {
@@ -273,7 +275,7 @@ export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
     }
 
     /** @hidden Adjust fits position of active item, based on slide direction */
-    private _adjustActiveItemPosition(slideDirection: -1 | 1): void {
+    private _adjustActiveItemPosition(slideDirection: number): void {
         // Move one step in the direction
         this.currentActiveItemsStartIndex = this.currentActiveItemsStartIndex + slideDirection;
 

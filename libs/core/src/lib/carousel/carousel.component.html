@@ -1,4 +1,5 @@
-<div class="fd-carousel" data-ride="carousel" [style.width]="width" [style.height]="height" [attr.dir]="dir">
+<div #carousel class="fd-carousel" data-ride="carousel" [attr.dir]="dir" [attr.aria-label]="ariaLabel"
+    [attr.aria-labelledby]="ariaLabelledBy" [attr.aria-describedby]="ariaDescribedBy">
     <ng-container *ngIf="showPageIndicatorContainer && pageIndicatorContainerPlacement === 'top'">
         <ng-container *ngTemplateOutlet="pageIndicatorContainer"></ng-container>
     </ng-container>
@@ -10,15 +11,6 @@
 
         <ng-content></ng-content>
 
-        <ng-container *ngIf="displayErrorMessage">
-            <div>
-                <div style="display: flex; justify-content: center;">
-                    <i class="sap-icon--document"></i>
-                </div>
-                <div>{{errorMessage}}</div>
-            </div>
-        </ng-container>
-
         <ng-container *ngIf="showNavigator && !navigatorInPageIndicator">
             <ng-container *ngTemplateOutlet="buttonRight"></ng-container>
         </ng-container>
@@ -27,7 +19,7 @@
         <ng-container *ngTemplateOutlet="pageIndicatorContainer"></ng-container>
     </ng-container>
 
-    <div style="display: none;" role="region" id="id+'-accessibility'" aria-live="polite">
+    <div style="display: none;" role="region" id="id+'-accessibility'" aria-live="polite" [attr.dir]="'ltr'">
         Displaying item {{currentActiveItemsStartIndex+1}} of {{pageIndicatorsCountArray.length}}
     </div>
 </div>
@@ -50,7 +42,8 @@
     <ng-container *ngIf="numericIndicator">
         <div class="fd-carousel__page-indicators">
             <ng-container *ngIf="showPageIndicator">
-                <div class="fd-carousel__text">{{currentActiveItemsStartIndex+1}} of {{pageIndicatorsCountArray.length}}
+                <div class="fd-carousel__text" [attr.dir]="'ltr'">
+                    {{currentActiveItemsStartIndex+1}} of {{pageIndicatorsCountArray.length}}
                 </div>
             </ng-container>
         </div>
@@ -69,14 +62,14 @@
 
 <ng-template #buttonLeft>
     <button class="fd-button fd-carousel__button fd-carousel__button--left" data-slide="previous"
-        aria-label="Go to previous item" (click)="setCurrentSlide(-1)" [disabled]="leftButtonDisabled">
+        [attr.aria-label]="leftNavigationBtnLabel" (click)="setCurrentSlide(-1)" [disabled]="leftButtonDisabled">
         <i class="sap-icon--slim-arrow-left"></i>
     </button>
 </ng-template>
 
 <ng-template #buttonRight>
     <button class="fd-button fd-carousel__button fd-carousel__button--right" data-slide="next"
-        aria-label="Go to next item" (click)="setCurrentSlide(1)" [disabled]="rightButtonDisabled">
+        [attr.aria-label]="rightNavigationBtnLabel" (click)="setCurrentSlide(1)" [disabled]="rightButtonDisabled">
         <i class="sap-icon--slim-arrow-right"></i>
     </button>
 </ng-template>
