@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { whenStable } from './../utils/tests/when-stable';
-import { CarouselNewModule } from './carousel.module';
+import { CarouselModule } from '../utils/directives/carousel/carousel.module';
 import { CarouselComponent } from './carousel.component';
 import { CarouselItemComponent } from './carousel-item/carousel-item.component';
 import { By } from '@angular/platform-browser';
@@ -130,7 +130,7 @@ describe('CarouselComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [CarouselComponent, CarouselItemComponent, TestCarouselComponent],
-            imports: [CarouselNewModule]
+            imports: [CarouselModule]
         }).compileComponents();
     }));
 
@@ -318,7 +318,7 @@ describe('CarouselComponent Multiple Active Item', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [CarouselComponent, CarouselItemComponent, TestCarouselMultipleActiveItemComponent],
-            imports: [CarouselNewModule]
+            imports: [CarouselModule]
         }).compileComponents();
     }));
 
@@ -574,7 +574,7 @@ describe('CarouselComponent looping navigation', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [CarouselComponent, CarouselItemComponent, TestCarouselLoopingNavigationComponent],
-            imports: [CarouselNewModule]
+            imports: [CarouselModule]
         }).compileComponents();
     }));
 
