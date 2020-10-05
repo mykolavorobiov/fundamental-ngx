@@ -35,7 +35,7 @@ class CarouselActiveItem {
 })
 export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
     /** @hidden */
-    @ContentChildren(CarouselItemComponent)
+    @ContentChildren(CarouselItemComponent, { descendants: true })
     items: QueryList<CarouselItemComponent>;
 
     /** Id for the Carousel. */
@@ -54,6 +54,14 @@ export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
     /** Sets aria-describedby attribute for carousel */
     @Input()
     ariaDescribedBy: string;
+
+    /** Height for carousel container */
+    @Input()
+    height: string;
+
+    /** Width for carousel container */
+    @Input()
+    width: string;
 
     /** Label for left navigation button */
     @Input()
@@ -108,9 +116,6 @@ export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
     /** @hidden Convert to Numeric page indicator */
     numericIndicator = false;
 
-    /** @hidden Display error message when no carousel item is loaded */
-    displayErrorMessage = false;
-
     /** @hidden Fake array for counting number of page indicator */
     pageIndicatorsCountArray: number[] = [];
 
@@ -141,7 +146,8 @@ export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
         if (this.items.length > 0) {
             this._initializeCarousel();
         } else {
-            this.displayErrorMessage = true;
+            this.leftButtonDisabled = true;
+            this.rightButtonDisabled = true;
         }
 
         // Change pagination display to numeric, if item count is more than 8
@@ -253,7 +259,7 @@ export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
     private _initializeButtonVisibility(): void {
         if (!this.isCircular) {
             // Navigation will be disabled if carousel has only one element
-            if (this.items.length === 0) {
+            if (this.items.length === 1) {
                 this.leftButtonDisabled = true;
                 this.rightButtonDisabled = true;
             }
