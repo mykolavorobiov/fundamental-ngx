@@ -106,20 +106,6 @@ import { By } from '@angular/platform-browser';
                 cupiditate consequatur omnis hic voluptatum odit quia at fugiat. Sint minus enim, ipsum necessitatibus
                 quos alias perspiciatis architecto similique veniam pariatur commodi amet.
             </fd-carousel-item>
-
-            <ng-container *ngIf="ninthItemVisible">
-                <fd-carousel-item>
-                    Item 9 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus facilis doloribus
-                    repellendus quia consequuntur distinctio nobis unde omnis laboriosam. Saepe voluptatum laborum
-                    dicta, dignissimos quo voluptate consequuntur quidem maiores vitae assumenda iure magnam natus quae
-                    ea repudiandae nihil tempore ratione, rem accusantium quibusdam culpa deleniti reprehenderit.
-                    Consequatur autem sed nesciunt hic ex blanditiis quidem, tempore reprehenderit dolorum. Praesentium
-                    ipsa cum perspiciatis voluptatem, aliquam error soluta exercitationem ullam saepe eum, amet illo
-                    beatae qui nobis est nemo, libero cupiditate consequatur omnis hic voluptatum odit quia at fugiat.
-                    Sint minus enim, ipsum necessitatibus quos alias perspiciatis architecto similique veniam pariatur
-                    commodi amet.
-                </fd-carousel-item>
-            </ng-container>
         </fd-carousel>
     `
 })
@@ -135,8 +121,6 @@ class TestCarouselComponent {
     navigatorInPageIndicator = true;
     pageIndicatorContainerPlacement = 'top';
     isCircular = false;
-
-    ninthItemVisible: boolean;
 }
 
 describe('CarouselComponent', () => {
@@ -325,8 +309,6 @@ class TestCarouselMultipleActiveItemComponent {
     navigatorInPageIndicator = true;
     pageIndicatorContainerPlacement = 'top';
     isCircular = false;
-
-    ninthItemVisible: boolean;
 }
 
 describe('CarouselComponent Multiple Active Item', () => {
@@ -465,5 +447,204 @@ describe('CarouselComponent Multiple Active Item', () => {
         expect(component.carousel.items.toArray()[3].isActive).toEqual(true);
         expect(component.carousel.items.toArray()[4].isActive).toEqual(true);
         expect(component.carousel.items.toArray()[5].isActive).toEqual(false);
+    });
+});
+
+@Component({
+    selector: 'fd-test-looping-navigation-carousel',
+    template: `
+        <fd-carousel
+            [visibleItemsStartPosition]="visibleItemsStartPosition"
+            [visibleItemsCount]="visibleItemsCount"
+            [showPageIndicatorContainer]="showPageIndicatorContainer"
+            [showPageIndicator]="showPageIndicator"
+            [showNavigator]="showNavigator"
+            [navigatorInPageIndicator]="navigatorInPageIndicator"
+            [pageIndicatorContainerPlacement]="pageIndicatorContainerPlacement"
+            [isCircular]="isCircular"
+        >
+            <fd-carousel-item>
+                Item 1 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus facilis doloribus repellendus
+                quia consequuntur distinctio nobis unde omnis laboriosam. Saepe voluptatum laborum dicta, dignissimos
+                quo voluptate consequuntur quidem maiores vitae assumenda iure magnam natus quae ea repudiandae nihil
+                tempore ratione, rem accusantium quibusdam culpa deleniti reprehenderit. Consequatur autem sed nesciunt
+                hic ex blanditiis quidem, tempore reprehenderit dolorum. Praesentium ipsa cum perspiciatis voluptatem,
+                aliquam error soluta exercitationem ullam saepe eum, amet illo beatae qui nobis est nemo, libero
+                cupiditate consequatur omnis hic voluptatum odit quia at fugiat. Sint minus enim, ipsum necessitatibus
+                quos alias perspiciatis architecto similique veniam pariatur commodi amet.
+            </fd-carousel-item>
+
+            <fd-carousel-item>
+                Item 2 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus facilis doloribus repellendus
+                quia consequuntur distinctio nobis unde omnis laboriosam. Saepe voluptatum laborum dicta, dignissimos
+                quo voluptate consequuntur quidem maiores vitae assumenda iure magnam natus quae ea repudiandae nihil
+                tempore ratione, rem accusantium quibusdam culpa deleniti reprehenderit. Consequatur autem sed nesciunt
+                hic ex blanditiis quidem, tempore reprehenderit dolorum. Praesentium ipsa cum perspiciatis voluptatem,
+                aliquam error soluta exercitationem ullam saepe eum, amet illo beatae qui nobis est nemo, libero
+                cupiditate consequatur omnis hic voluptatum odit quia at fugiat. Sint minus enim, ipsum necessitatibus
+                quos alias perspiciatis architecto similique veniam pariatur commodi amet.
+            </fd-carousel-item>
+
+            <fd-carousel-item>
+                Item 3 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus facilis doloribus repellendus
+                quia consequuntur distinctio nobis unde omnis laboriosam. Saepe voluptatum laborum dicta, dignissimos
+                quo voluptate consequuntur quidem maiores vitae assumenda iure magnam natus quae ea repudiandae nihil
+                tempore ratione, rem accusantium quibusdam culpa deleniti reprehenderit. Consequatur autem sed nesciunt
+                hic ex blanditiis quidem, tempore reprehenderit dolorum. Praesentium ipsa cum perspiciatis voluptatem,
+                aliquam error soluta exercitationem ullam saepe eum, amet illo beatae qui nobis est nemo, libero
+                cupiditate consequatur omnis hic voluptatum odit quia at fugiat. Sint minus enim, ipsum necessitatibus
+                quos alias perspiciatis architecto similique veniam pariatur commodi amet.
+            </fd-carousel-item>
+
+            <fd-carousel-item>
+                Item 4 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus facilis doloribus repellendus
+                quia consequuntur distinctio nobis unde omnis laboriosam. Saepe voluptatum laborum dicta, dignissimos
+                quo voluptate consequuntur quidem maiores vitae assumenda iure magnam natus quae ea repudiandae nihil
+                tempore ratione, rem accusantium quibusdam culpa deleniti reprehenderit. Consequatur autem sed nesciunt
+                hic ex blanditiis quidem, tempore reprehenderit dolorum. Praesentium ipsa cum perspiciatis voluptatem,
+                aliquam error soluta exercitationem ullam saepe eum, amet illo beatae qui nobis est nemo, libero
+                cupiditate consequatur omnis hic voluptatum odit quia at fugiat. Sint minus enim, ipsum necessitatibus
+                quos alias perspiciatis architecto similique veniam pariatur commodi amet.
+            </fd-carousel-item>
+
+            <fd-carousel-item>
+                Item 5 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus facilis doloribus repellendus
+                quia consequuntur distinctio nobis unde omnis laboriosam. Saepe voluptatum laborum dicta, dignissimos
+                quo voluptate consequuntur quidem maiores vitae assumenda iure magnam natus quae ea repudiandae nihil
+                tempore ratione, rem accusantium quibusdam culpa deleniti reprehenderit. Consequatur autem sed nesciunt
+                hic ex blanditiis quidem, tempore reprehenderit dolorum. Praesentium ipsa cum perspiciatis voluptatem,
+                aliquam error soluta exercitationem ullam saepe eum, amet illo beatae qui nobis est nemo, libero
+                cupiditate consequatur omnis hic voluptatum odit quia at fugiat. Sint minus enim, ipsum necessitatibus
+                quos alias perspiciatis architecto similique veniam pariatur commodi amet.
+            </fd-carousel-item>
+
+            <fd-carousel-item>
+                Item 6 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus facilis doloribus repellendus
+                quia consequuntur distinctio nobis unde omnis laboriosam. Saepe voluptatum laborum dicta, dignissimos
+                quo voluptate consequuntur quidem maiores vitae assumenda iure magnam natus quae ea repudiandae nihil
+                tempore ratione, rem accusantium quibusdam culpa deleniti reprehenderit. Consequatur autem sed nesciunt
+                hic ex blanditiis quidem, tempore reprehenderit dolorum. Praesentium ipsa cum perspiciatis voluptatem,
+                aliquam error soluta exercitationem ullam saepe eum, amet illo beatae qui nobis est nemo, libero
+                cupiditate consequatur omnis hic voluptatum odit quia at fugiat. Sint minus enim, ipsum necessitatibus
+                quos alias perspiciatis architecto similique veniam pariatur commodi amet.
+            </fd-carousel-item>
+
+            <fd-carousel-item>
+                Item 7 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus facilis doloribus repellendus
+                quia consequuntur distinctio nobis unde omnis laboriosam. Saepe voluptatum laborum dicta, dignissimos
+                quo voluptate consequuntur quidem maiores vitae assumenda iure magnam natus quae ea repudiandae nihil
+                tempore ratione, rem accusantium quibusdam culpa deleniti reprehenderit. Consequatur autem sed nesciunt
+                hic ex blanditiis quidem, tempore reprehenderit dolorum. Praesentium ipsa cum perspiciatis voluptatem,
+                aliquam error soluta exercitationem ullam saepe eum, amet illo beatae qui nobis est nemo, libero
+                cupiditate consequatur omnis hic voluptatum odit quia at fugiat. Sint minus enim, ipsum necessitatibus
+                quos alias perspiciatis architecto similique veniam pariatur commodi amet.
+            </fd-carousel-item>
+
+            <fd-carousel-item>
+                Item 8 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus facilis doloribus repellendus
+                quia consequuntur distinctio nobis unde omnis laboriosam. Saepe voluptatum laborum dicta, dignissimos
+                quo voluptate consequuntur quidem maiores vitae assumenda iure magnam natus quae ea repudiandae nihil
+                tempore ratione, rem accusantium quibusdam culpa deleniti reprehenderit. Consequatur autem sed nesciunt
+                hic ex blanditiis quidem, tempore reprehenderit dolorum. Praesentium ipsa cum perspiciatis voluptatem,
+                aliquam error soluta exercitationem ullam saepe eum, amet illo beatae qui nobis est nemo, libero
+                cupiditate consequatur omnis hic voluptatum odit quia at fugiat. Sint minus enim, ipsum necessitatibus
+                quos alias perspiciatis architecto similique veniam pariatur commodi amet.
+            </fd-carousel-item>
+        </fd-carousel>
+    `
+})
+class TestCarouselLoopingNavigationComponent {
+    @ViewChild(CarouselComponent)
+    carousel: CarouselComponent;
+
+    visibleItemsStartPosition = 0;
+    visibleItemsCount = 1;
+    showPageIndicatorContainer = true;
+    showPageIndicator = true;
+    showNavigator = true;
+    navigatorInPageIndicator = true;
+    pageIndicatorContainerPlacement = 'bottom';
+    isCircular = true;
+}
+
+describe('CarouselComponent looping navigation', () => {
+    let component: TestCarouselLoopingNavigationComponent;
+    let fixture: ComponentFixture<TestCarouselLoopingNavigationComponent>;
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [CarouselComponent, CarouselItemComponent, TestCarouselLoopingNavigationComponent],
+            imports: [CarouselNewModule]
+        }).compileComponents();
+    }));
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(TestCarouselLoopingNavigationComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+
+    it('should have both navigation button enabled', async () => {
+        whenStable(fixture);
+
+        const leftNavigationBtn = fixture.debugElement.query(By.css('.fd-carousel__button--left'));
+        const rightNavigationBtn = fixture.debugElement.query(By.css('.fd-carousel__button--right'));
+
+        expect(leftNavigationBtn.nativeElement.disabled).toEqual(false);
+        expect(rightNavigationBtn.nativeElement.disabled).toEqual(false);
+    });
+
+    it('should make last item as active on left button click', async () => {
+        whenStable(fixture);
+
+        const leftNavigationBtn = fixture.debugElement.query(By.css('.fd-carousel__button--left'));
+
+        expect(component.carousel.items.toArray()[0].isActive).toEqual(true);
+
+        leftNavigationBtn.nativeElement.click();
+        whenStable(fixture);
+
+        expect(component.carousel.items.toArray()[0].isActive).toEqual(false);
+        // last carousel item will be active
+        expect(component.carousel.items.last.isActive).toEqual(true);
+
+        const rightNavigationBtn = fixture.debugElement.query(By.css('.fd-carousel__button--right'));
+        rightNavigationBtn.nativeElement.click();
+        whenStable(fixture);
+        // reverse
+        expect(component.carousel.items.toArray()[0].isActive).toEqual(true);
+    });
+
+    it('should make first item as active on right button click from last item', async () => {
+        whenStable(fixture);
+
+        const rightNavigationBtn = fixture.debugElement.query(By.css('.fd-carousel__button--right'));
+
+        rightNavigationBtn.nativeElement.click();
+        rightNavigationBtn.nativeElement.click();
+        rightNavigationBtn.nativeElement.click();
+        rightNavigationBtn.nativeElement.click();
+        rightNavigationBtn.nativeElement.click();
+        rightNavigationBtn.nativeElement.click();
+        rightNavigationBtn.nativeElement.click();
+        whenStable(fixture);
+        // last item is active
+        console.log('length: ', component.carousel.items.length);
+        expect(component.carousel.items.last.isActive).toEqual(true);
+
+        rightNavigationBtn.nativeElement.click();
+        whenStable(fixture);
+        expect(component.carousel.items.first.isActive).toEqual(true);
+
+        const leftNavigationBtn = fixture.debugElement.query(By.css('.fd-carousel__button--left'));
+        leftNavigationBtn.nativeElement.click();
+        whenStable(fixture);
+
+        // reverse
+        expect(component.carousel.items.last.isActive).toEqual(true);
     });
 });
