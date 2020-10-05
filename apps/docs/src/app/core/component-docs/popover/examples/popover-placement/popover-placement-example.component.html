@@ -1,3 +1,18 @@
+<div>
+    <fd-select placeholder="xOverlay" [(value)]="xOverlay">
+        <fd-option *ngFor="let option of xPositions" [value]="option">{{option}}</fd-option>
+    </fd-select>
+    <fd-select placeholder="yOverlay" [(value)]="yOverlay">
+        <fd-option *ngFor="let option of yPositions" [value]="option">{{option}}</fd-option>
+    </fd-select>
+    <fd-select placeholder="xBackdrop" [(value)]="xBackdrop">
+        <fd-option *ngFor="let option of xPositions" [value]="option">{{option}}</fd-option>
+    </fd-select>
+    <fd-select placeholder="yBackdrop" [(value)]="yBackdrop">
+        <fd-option *ngFor="let option of yPositions" [value]="option">{{option}}</fd-option>
+    </fd-select>
+</div>
+
 <div class="docs-popover-container docs-popover-container--horizontal">
     <div class="docs-popover-element">
         <fd-cdk-popover placement="top-start" [noArrow]="false" title="top-start">

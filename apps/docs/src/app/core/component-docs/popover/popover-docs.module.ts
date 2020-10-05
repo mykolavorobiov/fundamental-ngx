@@ -19,7 +19,8 @@ import {
     SideNavigationModule,
     BarModule,
     AvatarModule,
-    ListModule
+    ListModule,
+    SelectModule
 } from '@fundamental-ngx/core';
 import { PopoverComplexExampleComponent } from './examples/popover-complex-example/popover-complex-example.component';
 
@@ -44,7 +45,8 @@ const routes: Routes = [
         DialogModule,
         ListModule,
         AvatarModule,
-        BarModule
+        BarModule,
+        SelectModule
     ],
     exports: [RouterModule],
     declarations: [

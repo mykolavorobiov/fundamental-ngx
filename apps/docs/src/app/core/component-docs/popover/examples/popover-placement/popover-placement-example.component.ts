@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { XPositions, YPositions } from '@fundamental-ngx/core';
 
 @Component({
     selector: 'fd-popover-placement-example',
@@ -11,4 +12,12 @@ export class PopoverPlacementExampleComponent {
         { text: 'Option 2', url: '#' },
         { text: 'Option 3', url: '#' }
     ];
+
+    yPositions: YPositions[] = ['bottom', 'center', 'top'];
+    xPositions: XPositions[] = ['start', 'center', 'end'];
+
+    xOverlay = 'center';
+    yOverlay = 'center';
+    xBackdrop = 'center';
+    yBackdrop = 'center';
 }

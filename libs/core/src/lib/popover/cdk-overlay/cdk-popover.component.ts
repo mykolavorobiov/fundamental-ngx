@@ -34,7 +34,7 @@ const DefaultPositions: ConnectedPosition[] = [
     { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' },
     { originX: 'center', originY: 'center', overlayX: 'start', overlayY: 'top' },
     { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' }
-]
+];
 
 export type XPositions = 'start' | 'center' | 'end';
 export type YPositions = 'top' | 'center' | 'bottom';
@@ -53,6 +53,7 @@ const xPositions: XPositions[] = ['start', 'center', 'end'];
     templateUrl: './cdk-popover.component.html',
     host: {
         '[class.fd-popover-custom]': 'true',
+        '[class.fd-popover]': 'true',
         '[attr.id]': 'id'
     },
     encapsulation: ViewEncapsulation.None,
@@ -74,7 +75,7 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
 
     /** @hidden */
     @ViewChild(CdkOverlayOrigin)
-    triggerOrigin: CdkOverlayOrigin
+    triggerOrigin: CdkOverlayOrigin;
 
     /** Whether the popover is disabled. */
     @Input()
@@ -138,7 +139,9 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
         private _changeDetectorReference: ChangeDetectorRef,
         private _overlay: Overlay,
         @Optional() private _rtlService: RtlService
-    ) {super()}
+    ) {
+        super();
+    }
 
     ngOnInit(): void {
         if (!this.scrollStrategy) {
@@ -148,6 +151,10 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
 
     ngAfterViewInit(): void {
         this.addTriggerListeners();
+
+        if (this.isOpen) {
+            this.open();
+        }
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -164,12 +171,8 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
         this._onDestroy$.next();
         this._onDestroy$.complete();
         if (this._overlayRef) {
-            this._overlayRef.detach()
+            this._overlayRef.detach();
         }
-    }
-
-    debug(a): void {
-        console.log(a.scrollStrategy);
     }
 
     /**
@@ -187,10 +190,10 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
      * Closes the popover.
      */
     public close(): void {
-        if (this.isOpen) {
+        console.log('appendedClose');
+        if (this._overlayRef && this._overlayRef.hasAttached()) {
             this.isOpen = false;
-            console.log('close');
-            this._overlayRef.dispose()
+            this._overlayRef.detach();
             this._changeDetectorReference.detectChanges();
             this.isOpenChange.emit(this.isOpen);
         }
@@ -200,12 +203,9 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
      * Opens the popover.
      */
     public open(): void {
-        if (!this.isOpen) {
-            this._overlayRef = this._overlay.create(this._getOverlayConfig());
-            this._overlayRef.attach(new TemplatePortal(this.templateRef, this.container))
-
-            console.log('open');
-            console.log(this._overlayRef);
+        this._overlayRef = this._overlay.create(this._getOverlayConfig());
+        if (this._overlayRef && !this._overlayRef.hasAttached()) {
+            this._overlayRef.attach(new TemplatePortal(this.templateRef, this.container));
 
             this.isOpen = true;
             this._changeDetectorReference.detectChanges();
@@ -231,12 +231,11 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
 
     /** Method that is called, when there is keydown event dispatched */
     public handleKeydown(event: KeyboardEvent): void {
-        if (KeyUtil.isKey(event, 'ArrowDown') && event.altKey) {
+        if (KeyUtil.isKey(event, 'ArrowDown') && event.altKey && !this.isOpen) {
             this.open();
         }
 
-        if (KeyUtil.isKey(event, 'Escape') && this.closeOnEscapeKey) {
-            console.log('escape');
+        if (KeyUtil.isKey(event, 'Escape') && this.closeOnEscapeKey && this.isOpen) {
             this.close();
         }
     }
@@ -260,7 +259,6 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
         if (this.triggers && this.triggers.length > 0) {
             this.triggers.forEach(trigger => {
                 this.eventRef.push(this._renderer.listen(this.triggerOrigin.elementRef.nativeElement, trigger, () => {
-                    console.log('toggle');
                     this.toggle();
                 }));
             });
@@ -285,7 +283,7 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
     /** @hidden */
     private _getPositions(): ConnectedPosition[] {
         if (this.cdkPositions) {
-            return this.cdkPositions
+            return this.cdkPositions;
         }
 
         if (!this.placement) {
@@ -300,27 +298,27 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
         return [{
             originX: xPosition,
             originY: yPosition,
-            overlayX: xPosition,
-            overlayY: yPosition
+            overlayX: 'center',
+            overlayY: 'center'
         }];
     }
 
     private _getOppositePositionX(position: XPositions): XPositions {
         if (position === 'start') {
-            return 'end'
+            return 'end';
         }
         if (position === 'end') {
-            return 'start'
+            return 'start';
         }
         return position;
     }
 
     private _getOppositePositionY(position: YPositions): YPositions {
         if (position === 'top') {
-            return 'bottom'
+            return 'bottom';
         }
         if (position === 'bottom') {
-            return 'top'
+            return 'top';
         }
         return position;
     }
@@ -354,6 +352,6 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
             direction: direction,
             positionStrategy: position,
             scrollStrategy: this.scrollStrategy
-        })
+        });
     }
 }
