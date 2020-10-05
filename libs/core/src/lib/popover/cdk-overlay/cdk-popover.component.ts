@@ -317,7 +317,6 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
 
     private _getOverlayConfig(): OverlayConfig {
         const direction = this._getDirection();
-        console.log(this._getPositions());
         const position = this._overlay
             .position()
             .flexibleConnectedTo(this.triggerOrigin.elementRef)
