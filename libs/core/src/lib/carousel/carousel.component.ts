@@ -4,7 +4,6 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChildren,
-    ElementRef,
     EventEmitter,
     HostBinding,
     Input,
@@ -274,7 +273,7 @@ export class CarouselComponent implements OnInit, AfterContentInit, OnDestroy {
         }
     }
 
-    /** @hidden Adjust fits position of active item, based on slide direction */
+    /** @hidden Adjust position of active item, based on slide direction */
     private _adjustActiveItemPosition(slideDirection: number): void {
         // Move one step in the direction
         this.currentActiveItemsStartIndex = this.currentActiveItemsStartIndex + slideDirection;
