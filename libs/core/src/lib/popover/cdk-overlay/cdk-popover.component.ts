@@ -35,7 +35,8 @@ let popoverUniqueId = 0;
 const DefaultPositions: ConnectedPosition[] = [
     { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' },
     { originX: 'center', originY: 'center', overlayX: 'start', overlayY: 'top' },
-    { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' }
+    { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'bottom' },
+    { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' },
 ];
 
 export type XPositions = 'start' | 'center' | 'end';
@@ -104,6 +105,8 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
     /** Id of the popover. If none is provided, one will be generated. */
     @Input()
     id: string = 'fd-popover-' + popoverUniqueId++;
+
+    arrowPosition = '';
 
     /** TODO: */
     positions: FlexibleConnectedPositionStrategy;
@@ -211,7 +214,9 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
     }
 
     public refreshPosition(positions?: ConnectedPosition[]): void {
-        this._overlayRef.updatePositionStrategy(this._getPositionStrategy(positions));
+        const refPosition = this._getPositionStrategy(positions);
+        refPosition.positionChanges.subscribe(event => console.log(event.connectionPair.panelClass));
+        this._overlayRef.updatePositionStrategy(refPosition);
     }
 
     /** Method that is called, when there is keydown event dispatched */
@@ -328,9 +333,11 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
 
     private _getOverlayConfig(): OverlayConfig {
         const direction = this._getDirection();
+        const position = this._getPositionStrategy();
+
         return new OverlayConfig({
             direction: direction,
-            positionStrategy: this._getPositionStrategy(),
+            positionStrategy: position,
             scrollStrategy: this.scrollStrategy
         });
     }
@@ -342,7 +349,11 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
         return this._overlay
             .position()
             .flexibleConnectedTo(this.triggerOrigin.elementRef)
-            .withPositions(_resPosition)
+            .withPositions(_resPosition.concat(DefaultPositions))
             .withPush(false);
+    }
+
+    private _listenForPositionChange(): void {
+        this.overlay.positionStrategy.positionChanges.subscribe()
     }
 }

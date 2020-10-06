@@ -46,6 +46,18 @@
         </button>
     </fd-segmented-button>
 
+    <br>
+
+    <label fd-form-label>Arrow Position</label>
+    <fd-segmented-button style="margin-right: 10px; margin-left: 10px;">
+        <button fd-button
+                *ngFor="let option of arrowPositions"
+                (click)="arrowPosition = option; refresh()"
+                [class]="arrowPosition === option ? 'is-selected': ''"
+                [label]="option">
+        </button>
+    </fd-segmented-button>
+
 
 
 </div>
@@ -55,8 +67,7 @@
 
 <div style="width: 300px; height: 300px; display: flex; align-items: center; justify-content: center;">
 
-    <fd-cdk-popover title="top-start"
-                    [cdkPositions]="cdkPosition"
+    <fd-cdk-popover [cdkPositions]="cdkPosition"
                     [noArrow]="false"
                     [isOpen]="true"
                     [triggers]="[]"

@@ -19,11 +19,13 @@ export class PopoverPlacementExampleComponent {
 
     yPositions: YPositions[] = ['bottom', 'center', 'top'];
     xPositions: XPositions[] = ['start', 'center', 'end'];
+    arrowPositions = ['top', 'bottom', 'left', 'right'];
 
     originX: XPositions = 'center';
     originY: YPositions = 'center';
     overlayX: XPositions = 'center';
     overlayY: YPositions = 'center';
+    arrowPosition = 'top';
 
     cdkPosition: ConnectionPositionPair[]
 
@@ -32,7 +34,8 @@ export class PopoverPlacementExampleComponent {
             originX: this.originX,
             originY: this.originY,
             overlayX: this.overlayX,
-            overlayY: this.overlayY
+            overlayY: this.overlayY,
+            panelClass: 'fd-popover__arrow--' + this.arrowPosition
         }];
 
         this.popover.refreshPosition(this.cdkPosition);
