@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { XPositions, YPositions } from '@fundamental-ngx/core';
+import { Component, ViewChild } from '@angular/core';
+import { CdkPopoverComponent, XPositions, YPositions } from '@fundamental-ngx/core';
 import { ConnectionPositionPair } from '@angular/cdk/overlay';
 
 @Component({
@@ -13,6 +13,9 @@ export class PopoverPlacementExampleComponent {
         { text: 'Option 2', url: '#' },
         { text: 'Option 3', url: '#' }
     ];
+
+    @ViewChild(CdkPopoverComponent)
+    popover: CdkPopoverComponent
 
     yPositions: YPositions[] = ['bottom', 'center', 'top'];
     xPositions: XPositions[] = ['start', 'center', 'end'];
@@ -30,6 +33,8 @@ export class PopoverPlacementExampleComponent {
             originY: this.originY,
             overlayX: this.overlayX,
             overlayY: this.overlayY
-        }]
+        }];
+
+        this.popover.refreshPosition(this.cdkPosition);
     }
 }

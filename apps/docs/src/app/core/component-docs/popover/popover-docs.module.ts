@@ -20,7 +20,8 @@ import {
     BarModule,
     AvatarModule,
     ListModule,
-    SelectModule
+    SelectModule,
+    SegmentedButtonModule
 } from '@fundamental-ngx/core';
 import { PopoverComplexExampleComponent } from './examples/popover-complex-example/popover-complex-example.component';
 
@@ -46,7 +47,8 @@ const routes: Routes = [
         ListModule,
         AvatarModule,
         BarModule,
-        SelectModule
+        SelectModule,
+        SegmentedButtonModule
     ],
     exports: [RouterModule],
     declarations: [

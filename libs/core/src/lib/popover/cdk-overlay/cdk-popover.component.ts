@@ -1,4 +1,5 @@
 import {
+    AfterContentInit,
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -27,6 +28,7 @@ import { KeyUtil } from '@fundamental-ngx/core';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { merge, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
+import { OverlayPositionBuilder } from '@angular/cdk/overlay/position/overlay-position-builder';
 
 let popoverUniqueId = 0;
 
@@ -59,7 +61,7 @@ const xPositions: XPositions[] = ['start', 'center', 'end'];
     changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['./cdk-popover.component.scss']
 })
-export class CdkPopoverComponent extends BasePopoverClass implements AfterViewInit, OnInit, OnDestroy, OnChanges {
+export class CdkPopoverComponent extends BasePopoverClass implements AfterViewInit, OnInit, OnDestroy, OnChanges, AfterContentInit {
 
     /** @hidden */
     @ViewChild(CdkConnectedOverlay)
@@ -106,6 +108,8 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
     /** TODO: */
     positions: FlexibleConnectedPositionStrategy;
 
+    private _initialised = false;
+
     private eventRef: Function[] = [];
 
     private _overlayRef: OverlayRef;
@@ -130,15 +134,18 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
     }
 
     ngAfterViewInit(): void {
+        this._initialised = true;
         this.addTriggerListeners();
-
         if (this.isOpen) {
             this.open();
         }
     }
 
+    ngAfterContentInit(): void {
+    }
+
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['isOpen']) {
+        if (changes['isOpen'] && this._initialised) {
             if (changes['isOpen'].currentValue) {
                 this.open();
             } else {
@@ -201,6 +208,10 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
      */
     public openChanged(isOpen: boolean): void {
         this.isOpenChange.emit(isOpen);
+    }
+
+    public refreshPosition(positions?: ConnectedPosition[]): void {
+        this._overlayRef.updatePositionStrategy(this._getPositionStrategy(positions));
     }
 
     /** Method that is called, when there is keydown event dispatched */
@@ -317,15 +328,21 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
 
     private _getOverlayConfig(): OverlayConfig {
         const direction = this._getDirection();
-        const position = this._overlay
-            .position()
-            .flexibleConnectedTo(this.triggerOrigin.elementRef)
-            .withPositions(this._getPositions())
-            .withPush(false);
         return new OverlayConfig({
             direction: direction,
-            positionStrategy: position,
+            positionStrategy: this._getPositionStrategy(),
             scrollStrategy: this.scrollStrategy
         });
+    }
+
+    private _getPositionStrategy(positions?: ConnectedPosition[]): FlexibleConnectedPositionStrategy {
+
+        const _resPosition = positions ? positions : this._getPositions();
+
+        return this._overlay
+            .position()
+            .flexibleConnectedTo(this.triggerOrigin.elementRef)
+            .withPositions(_resPosition)
+            .withPush(false);
     }
 }
