@@ -26,9 +26,10 @@ import { RtlService } from '../../utils/services/rtl.service';
 import { BasePopoverClass } from '../base/base-popover.class';
 import { KeyUtil } from '@fundamental-ngx/core';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { merge, Subject } from 'rxjs';
+import { merge, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, takeUntil } from 'rxjs/operators';
 import { OverlayPositionBuilder } from '@angular/cdk/overlay/position/overlay-position-builder';
+import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay/position/connected-position';
 
 let popoverUniqueId = 0;
 
@@ -36,7 +37,7 @@ const DefaultPositions: ConnectedPosition[] = [
     { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' },
     { originX: 'center', originY: 'center', overlayX: 'start', overlayY: 'top' },
     { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'bottom' },
-    { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' },
+    { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' }
 ];
 
 export type XPositions = 'start' | 'center' | 'end';
@@ -107,6 +108,7 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
     id: string = 'fd-popover-' + popoverUniqueId++;
 
     arrowPosition = '';
+    marginStyle = '';
 
     /** TODO: */
     positions: FlexibleConnectedPositionStrategy;
@@ -215,17 +217,7 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
 
     public refreshPosition(positions?: ConnectedPosition[]): void {
         const refPosition = this._getPositionStrategy(positions);
-        refPosition.positionChanges
-            .pipe(
-                distinctUntilChanged(
-                (previous, current) =>
-                    previous.connectionPair === current.connectionPair
-                ))
-            .subscribe(event => {
-                this.arrowPosition = this._getArrowPosition(event.connectionPair);
-                this._changeDetectorReference.detectChanges();
-            })
-        ;
+        this._listenForPositionChange(refPosition.positionChanges);
         this._overlayRef.updatePositionStrategy(refPosition);
     }
 
@@ -363,19 +355,43 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
             .withPush(false);
     }
 
-    private _listenForPositionChange(): void {
-        this.overlay.positionStrategy.positionChanges.subscribe()
+    private _listenForPositionChange(positionChange: Observable<ConnectedOverlayPositionChange>): void {
+        positionChange
+            .pipe(
+                distinctUntilChanged(
+                    (previous, current) =>
+                        previous.connectionPair === current.connectionPair
+                ))
+            .subscribe(event => {
+                this.arrowPosition = this._getArrowPosition(event.connectionPair);
+                this.marginStyle = this._getMarginStyle(this.arrowPosition);
+                this._changeDetectorReference.detectChanges();
+            })
+        ;
     }
 
     private _getArrowPosition(position: ConnectedPosition): string {
-        let _position = ''
+        let _position = '';
 
-        if (position.overlayY === position.originY) {
+        if (position.overlayY !== position.originY && position.originY !== 'center') {
+            _position = position.overlayY;
+        } else if (position.overlayX !== position.originX && position.originX !== 'center') {
             _position = position.overlayX;
-        } else {
-            _position = position.overlayY
         }
 
         return (_position === 'center' ? '' : _position);
+    }
+
+    private _getMarginStyle(position: string): string {
+        if (!position) {
+            return;
+        }
+        if (position === 'start') {
+            return 'margin-left: 0.5rem;';
+        }
+        if (position === 'end') {
+            return 'margin-right: 0.5rem;';
+        }
+        return 'margin-' + position + ': 0.5rem;';
     }
 }
