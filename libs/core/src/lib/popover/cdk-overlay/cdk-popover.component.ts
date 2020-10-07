@@ -1,17 +1,19 @@
 import {
-    AfterContentInit,
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    EventEmitter,
     HostBinding,
-    Input, OnChanges, OnDestroy,
+    Input,
+    OnChanges,
+    OnDestroy,
     OnInit,
     Optional,
-    Output,
-    Renderer2, SimpleChanges, TemplateRef,
-    ViewChild, ViewContainerRef,
+    Renderer2,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+    ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -19,16 +21,17 @@ import {
     CdkOverlayOrigin,
     ConnectedPosition,
     FlexibleConnectedPositionStrategy,
-    Overlay, OverlayConfig, OverlayRef,
+    Overlay,
+    OverlayConfig,
+    OverlayRef,
     ScrollStrategy
 } from '@angular/cdk/overlay';
 import { RtlService } from '../../utils/services/rtl.service';
 import { BasePopoverClass } from '../base/base-popover.class';
-import { KeyUtil } from '@fundamental-ngx/core';
+import { KeyUtil } from '../../utils/functions/key-util';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { merge, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, takeUntil } from 'rxjs/operators';
-import { OverlayPositionBuilder } from '@angular/cdk/overlay/position/overlay-position-builder';
 import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay/position/connected-position';
 
 let popoverUniqueId = 0;
@@ -80,7 +83,8 @@ const xPositions: XPositions[] = ['start', 'center', 'end'];
     changeDetection: ChangeDetectionStrategy.OnPush,
     styleUrls: ['./cdk-popover.component.scss']
 })
-export class CdkPopoverComponent extends BasePopoverClass implements AfterViewInit, OnInit, OnDestroy, OnChanges, AfterContentInit {
+export class CdkPopoverComponent extends BasePopoverClass
+    implements AfterViewInit, OnInit, OnDestroy, OnChanges {
 
     /** @hidden */
     @ViewChild(CdkConnectedOverlay)
@@ -114,7 +118,10 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
     cdkPositions: ConnectedPosition[];
 
     @Input()
-    placement: string;
+    set placement(placement: string) {
+        this._placement = placement;
+    }
+    private _placement: string;
 
     /** Whether the popover should be focusTrapped. */
     @Input()
@@ -124,11 +131,9 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
     @Input()
     id: string = 'fd-popover-' + popoverUniqueId++;
 
+    /** TODO: */
     arrowPosition = '';
     marginStyle = '';
-
-    /** TODO: */
-    positions: FlexibleConnectedPositionStrategy;
 
     private _initialised = false;
 
@@ -161,9 +166,6 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
         if (this.isOpen) {
             this.open();
         }
-    }
-
-    ngAfterContentInit(): void {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -200,7 +202,6 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
      */
     public close(): void {
         if (this._overlayRef && this._overlayRef.hasAttached()) {
-            console.log('close');
             this.isOpen = false;
             this._overlayRef.dispose();
             this._changeDetectorReference.detectChanges();
@@ -213,7 +214,6 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
      */
     public open(): void {
         if (!this._overlayRef || !this._overlayRef.hasAttached()) {
-            console.log('open');
             this._overlayRef = this._overlay.create(this._getOverlayConfig());
             this._overlayRef.attach(new TemplatePortal(this.templateRef, this.container));
 
