@@ -10,7 +10,7 @@
     <div class="fd-popover__popper fd-popover__popper--cdk-custom"
          [class.fd-popover__popper--no-arrow]="noArrow"
          [ngClass]="additionalBodyClass">
-        <span class="fd-popover__arrow" *ngIf="!noArrow"></span>
+        <span class="fd-popover__arrow" [ngClass]="'fd-popover__arrow--' + arrowPosition" *ngIf="!noArrow"></span>
         <ng-content select="fd-popover-body"></ng-content>
     </div>
 </ng-template>

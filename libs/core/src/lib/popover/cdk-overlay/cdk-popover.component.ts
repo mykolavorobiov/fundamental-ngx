@@ -27,7 +27,7 @@ import { BasePopoverClass } from '../base/base-popover.class';
 import { KeyUtil } from '@fundamental-ngx/core';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { merge, Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, filter, takeUntil } from 'rxjs/operators';
 import { OverlayPositionBuilder } from '@angular/cdk/overlay/position/overlay-position-builder';
 
 let popoverUniqueId = 0;
@@ -215,7 +215,17 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
 
     public refreshPosition(positions?: ConnectedPosition[]): void {
         const refPosition = this._getPositionStrategy(positions);
-        refPosition.positionChanges.subscribe(event => console.log(event.connectionPair.panelClass));
+        refPosition.positionChanges
+            .pipe(
+                distinctUntilChanged(
+                (previous, current) =>
+                    previous.connectionPair === current.connectionPair
+                ))
+            .subscribe(event => {
+                this.arrowPosition = this._getArrowPosition(event.connectionPair);
+                this._changeDetectorReference.detectChanges();
+            })
+        ;
         this._overlayRef.updatePositionStrategy(refPosition);
     }
 
@@ -355,5 +365,17 @@ export class CdkPopoverComponent extends BasePopoverClass implements AfterViewIn
 
     private _listenForPositionChange(): void {
         this.overlay.positionStrategy.positionChanges.subscribe()
+    }
+
+    private _getArrowPosition(position: ConnectedPosition): string {
+        let _position = ''
+
+        if (position.overlayY === position.originY) {
+            _position = position.overlayX;
+        } else {
+            _position = position.overlayY
+        }
+
+        return (_position === 'center' ? '' : _position);
     }
 }
