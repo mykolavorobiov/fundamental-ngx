@@ -11,74 +11,75 @@ $fd-popover-arrow-offset: 0.5rem !default;
 $fd-popover-arrow-color: var(--sapContent_ForegroundBorderColor) !default;
 $fd-popover-background-color: var(--sapGroup_ContentBackground) !default;
 
-
-.fd-popover__arrow {
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-color: transparent;
-
-    &::after {
+.fd-popover__popper.fd-popover__popper--cdk-custom {
+    .fd-popover__arrow {
         position: absolute;
-        content: "";
+        width: 0;
+        height: 0;
         border-style: solid;
-        border-color: transparent;
-    }
-
-    &--top {
-        bottom: -$fd-popover-arrow-height;
-        margin: 0 $fd-popover-arrow-width-half;
-        border-width: $fd-popover-arrow-height $fd-popover-arrow-width-half 0 $fd-popover-arrow-width-half;
-        border-top-color: $fd-popover-arrow-color;
+        border-color: black;
 
         &::after {
-            bottom: 1px;
-            margin: 0 (-$fd-popover-arrow-width-half);
+            position: absolute;
+            content: "";
+            border-style: solid;
+            border-color: transparent;
+        }
+
+        &--bottom {
+            bottom: -$fd-popover-arrow-height;
+            margin: 0 $fd-popover-arrow-width-half;
             border-width: $fd-popover-arrow-height $fd-popover-arrow-width-half 0 $fd-popover-arrow-width-half;
-            border-top-color: $fd-popover-background-color;
+            border-top-color: $fd-popover-arrow-color;
+
+            &::after {
+                bottom: 1px;
+                margin: 0 (-$fd-popover-arrow-width-half);
+                border-width: $fd-popover-arrow-height $fd-popover-arrow-width-half 0 $fd-popover-arrow-width-half;
+                border-top-color: $fd-popover-background-color;
+            }
         }
-    }
 
-    &--bottom {
-        top: -$fd-popover-arrow-height;
-        margin: 0 $fd-popover-arrow-width-half;
-        border-width: 0 $fd-popover-arrow-width-half $fd-popover-arrow-height $fd-popover-arrow-width-half;
-        border-bottom-color: $fd-popover-arrow-color;
-
-        &::after {
-            top: 1px;
-            margin: 0 (-$fd-popover-arrow-width-half);
+        &--top {
+            top: -$fd-popover-arrow-height;
+            margin: 0 $fd-popover-arrow-width-half;
             border-width: 0 $fd-popover-arrow-width-half $fd-popover-arrow-height $fd-popover-arrow-width-half;
-            border-bottom-color: $fd-popover-background-color;
+            border-bottom-color: $fd-popover-arrow-color;
+
+            &::after {
+                top: 1px;
+                margin: 0 (-$fd-popover-arrow-width-half);
+                border-width: 0 $fd-popover-arrow-width-half $fd-popover-arrow-height $fd-popover-arrow-width-half;
+                border-bottom-color: $fd-popover-background-color;
+            }
         }
-    }
 
-    &--start {
-        right: -$fd-popover-arrow-height;
-        margin: $fd-popover-arrow-width-half 0;
-        border-width: $fd-popover-arrow-width-half 0 $fd-popover-arrow-width-half $fd-popover-arrow-height;
-        border-left-color: $fd-popover-arrow-color;
-
-        &::after {
-            right: 1px;
-            margin: -$fd-popover-arrow-width-half 0;
+        &--end {
+            right: -$fd-popover-arrow-height;
+            margin: $fd-popover-arrow-width-half 0;
             border-width: $fd-popover-arrow-width-half 0 $fd-popover-arrow-width-half $fd-popover-arrow-height;
-            border-left-color: $fd-popover-background-color;
+            border-left-color: $fd-popover-arrow-color;
+
+            &::after {
+                right: 1px;
+                margin: -$fd-popover-arrow-width-half 0;
+                border-width: $fd-popover-arrow-width-half 0 $fd-popover-arrow-width-half $fd-popover-arrow-height;
+                border-left-color: $fd-popover-background-color;
+            }
         }
-    }
 
-    &--end {
-        left: -$fd-popover-arrow-height;
-        margin: $fd-popover-arrow-width-half 0;
-        border-width: $fd-popover-arrow-width-half $fd-popover-arrow-height $fd-popover-arrow-width-half 0;
-        border-right-color: $fd-popover-arrow-color;
-
-        &::after {
-            left: 1px;
-            margin: -$fd-popover-arrow-width-half 0;
+        &--start {
+            left: -$fd-popover-arrow-height;
+            margin: $fd-popover-arrow-width-half 0;
             border-width: $fd-popover-arrow-width-half $fd-popover-arrow-height $fd-popover-arrow-width-half 0;
-            border-right-color: $fd-popover-background-color;
+            border-right-color: $fd-popover-arrow-color;
+
+            &::after {
+                left: 1px;
+                margin: -$fd-popover-arrow-width-half 0;
+                border-width: $fd-popover-arrow-width-half $fd-popover-arrow-height $fd-popover-arrow-width-half 0;
+                border-right-color: $fd-popover-background-color;
+            }
         }
     }
 }
