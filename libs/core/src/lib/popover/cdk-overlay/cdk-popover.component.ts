@@ -34,10 +34,12 @@ import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay/position/co
 let popoverUniqueId = 0;
 
 const DefaultPositions: ConnectedPosition[] = [
+    { originX: 'center', originY: 'bottom', overlayX: 'center', overlayY: 'top' },
     { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' },
-    { originX: 'center', originY: 'center', overlayX: 'start', overlayY: 'top' },
-    { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'bottom' },
-    { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' }
+    { originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top' },
+    { originX: 'center', originY: 'top', overlayX: 'center', overlayY: 'bottom' },
+    { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom' },
+    { originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom' }
 ];
 
 export type XPositions = 'start' | 'center' | 'end';
